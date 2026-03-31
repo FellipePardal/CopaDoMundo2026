@@ -43,9 +43,7 @@ const CircleAsset = ({ size = 120, color = '#65B32E', opacity = 0.06, style = {}
   <div style={{
     width: size, height: size, borderRadius: '50%',
     border: `2px solid ${color}`,
-    opacity,
-    position: 'absolute',
-    pointerEvents: 'none',
+    opacity, position: 'absolute', pointerEvents: 'none',
     ...style,
   }} />
 )
@@ -67,26 +65,19 @@ export default function App() {
     { id: 'impostos', label: 'Impostos' },
   ]
 
-  const statusCards = [
-    { key: '',                    label: 'Pendente',           color: 'var(--muted)',  bg: 'var(--surface2)', border: 'var(--border)'  },
-    { key: 'Pago',                label: 'Pago',               color: '#65B32E', bg: 'rgba(101,179,46,0.08)',  border: 'rgba(101,179,46,0.25)'  },
-    { key: 'Aprovado / a pagar',  label: 'Aprovado / a pagar', color: '#4A9EDB', bg: 'rgba(74,158,219,0.08)',  border: 'rgba(74,158,219,0.25)'  },
-    { key: 'Em negociação',       label: 'Em negociação',      color: '#F5A623', bg: 'rgba(245,166,35,0.08)',  border: 'rgba(245,166,35,0.25)'  },
-  ]
-
   const isDark = theme === 'dark'
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}>
 
-      <CircleAsset size={400} color="#65B32E" opacity={isDark ? 0.04 : 0.06} style={{ top: -120, right: -120 }} />
-      <CircleAsset size={200} color="#65B32E" opacity={isDark ? 0.06 : 0.08} style={{ top: -30, right: -30 }} />
-      <CircleAsset size={600} color="#65B32E" opacity={isDark ? 0.025 : 0.04} style={{ bottom: -200, left: -200 }} />
+      <CircleAsset size={400} color="#65B32E" opacity={isDark ? 0.04 : 0.05} style={{ top: -120, right: -120 }} />
+      <CircleAsset size={200} color="#65B32E" opacity={isDark ? 0.06 : 0.07} style={{ top: -30, right: -30 }} />
+      <CircleAsset size={600} color="#65B32E" opacity={isDark ? 0.025 : 0.03} style={{ bottom: -200, left: -200 }} />
 
       {/* TOPBAR */}
       <div style={{
         background: isDark ? 'rgba(0,0,0,0.30)' : 'var(--surface)',
-        borderBottom: `1px solid var(--border)`,
+        borderBottom: '1px solid var(--border)',
         backdropFilter: isDark ? 'blur(10px)' : 'none',
         boxShadow: isDark ? 'none' : 'var(--shadow-sm)',
         position: 'sticky', top: 0, zIndex: 100,
@@ -136,7 +127,7 @@ export default function App() {
             ))}
           </div>
 
-          {/* Direita: cotação + toggle tema */}
+          {/* Direita */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{
               fontSize: 11, fontWeight: 500, color: 'var(--muted)',
@@ -165,6 +156,7 @@ export default function App() {
         {/* VISÃO GERAL */}
         {activeTab === 'overview' && (
           <>
+            {/* KPIs */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0,1fr))', gap: 14, marginBottom: 22 }}>
               <KpiCard label="Orçado Total"     value={fmtM(grand.orcado)}
                 sub={`${items.length} itens`} accent="#585455" />
@@ -179,48 +171,19 @@ export default function App() {
                 accent={grand.saldo < 0 ? '#E05252' : '#F5A623'} />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
-              <Card>
-                <CardTitle>Progresso de Execução</CardTitle>
-                {Object.entries(totals).map(([resp, t]) => (
-                  <ProgressBar key={resp} label={resp}
-                    pct={t.pctExec} realizado={t.realizado} orcado={t.orcado}
-                    color={resp === 'João Crispim' ? '#65B32E' : '#4A9EDB'}
-                    initials={resp === 'João Crispim' ? 'JC' : 'IV'}
-                  />
-                ))}
-              </Card>
-              <Card>
-                <CardTitle>Status dos Itens</CardTitle>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                  {statusCards.map(s => {
-                    const count = s.key === ''
-                      ? items.filter(i => !i.status).length
-                      : (byStatus[s.key]?.n || 0)
-                    const val = byStatus[s.key]?.val || 0
-                    return (
-                      <div key={s.key} style={{
-                        padding: '14px 16px', borderRadius: 'var(--radius-md)',
-                        background: s.bg, border: `1px solid ${s.border}`,
-                      }}>
-                        <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase',
-                          letterSpacing: '0.09em', color: s.color, marginBottom: 6 }}>
-                          {s.label}
-                        </div>
-                        <div style={{ fontSize: 26, fontWeight: 700, color: s.color, lineHeight: 1 }}>
-                          {count}
-                        </div>
-                        <div style={{ fontSize: 11, color: s.color, opacity: 0.8,
-                          marginTop: 4, fontFamily: 'var(--mono)' }}>
-                          {val > 0 ? fmtM(val) : '—'}
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </Card>
-            </div>
+            {/* Progresso — largura total, sem status */}
+            <Card style={{ marginBottom: 20 }}>
+              <CardTitle>Progresso de Execução</CardTitle>
+              {Object.entries(totals).map(([resp, t]) => (
+                <ProgressBar key={resp} label={resp}
+                  pct={t.pctExec} realizado={t.realizado} orcado={t.orcado}
+                  color={resp === 'João Crispim' ? '#65B32E' : '#4A9EDB'}
+                  initials={resp === 'João Crispim' ? 'JC' : 'IV'}
+                />
+              ))}
+            </Card>
 
+            {/* Gráficos */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
               <Card>
                 <CardTitle>Orçado vs Realizado</CardTitle>
@@ -244,6 +207,7 @@ export default function App() {
               </Card>
             </div>
 
+            {/* Resumo por categoria */}
             <Card>
               <CardTitle>Resumo por Categoria</CardTitle>
               <div style={{ overflowX: 'auto' }}>

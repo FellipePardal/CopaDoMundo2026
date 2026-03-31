@@ -5,32 +5,30 @@ import {
 } from 'recharts'
 import { CAT_COLORS, fmtM, fmt } from '../data/utils.js'
 
-const TIP = {
-  background: '#fff',
-  border: '1px solid #E2E8F0',
-  borderRadius: 8,
+const TIP_STYLE = {
+  background: '#3D3B3C',
+  border: '1px solid rgba(255,255,255,0.15)',
+  borderRadius: 10,
   fontSize: 12,
-  fontFamily: 'JetBrains Mono, monospace',
-  color: '#0F172A',
-  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+  color: '#fff',
+  boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
   padding: 0,
 }
 
 function Tip({ active, payload, label }) {
   if (!active || !payload?.length) return null
   return (
-    <div style={TIP}>
-      <div style={{ padding: '8px 14px', borderBottom: '1px solid #E2E8F0',
-        fontSize: 11, color: '#64748B', fontFamily: 'Inter, sans-serif',
-        fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+    <div style={TIP_STYLE}>
+      <div style={{ padding: '8px 14px', borderBottom: '1px solid rgba(255,255,255,0.10)',
+        fontSize: 10, color: 'rgba(255,255,255,0.5)', fontWeight: 600,
+        textTransform: 'uppercase', letterSpacing: '0.07em' }}>
         {label}
       </div>
       {payload.map((p, i) => (
-        <div key={i} style={{ padding: '6px 14px', display: 'flex',
-          alignItems: 'center', gap: 8 }}>
-          <span style={{ width: 8, height: 8, borderRadius: 2, background: p.fill || p.color }} />
-          <span style={{ color: '#334155', fontSize: 12 }}>{p.name}:</span>
-          <span style={{ fontWeight: 600, color: '#0F172A' }}>{fmt(p.value)}</span>
+        <div key={i} style={{ padding: '6px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ width: 7, height: 7, borderRadius: 2, background: p.fill || p.color }} />
+          <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12 }}>{p.name}:</span>
+          <span style={{ fontWeight: 700, color: '#fff' }}>{fmt(p.value)}</span>
         </div>
       ))}
     </div>
@@ -44,19 +42,18 @@ export function OrcadoVsRealizadoChart({ totals }) {
     'Realizado': Math.round(t.realizado),
     'Saldo':     Math.round(Math.max(0, t.saldo)),
   }))
-
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={data} barCategoryGap="35%" barGap={3}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
-        <XAxis dataKey="name" tick={{ fill: '#64748B', fontSize: 12, fontFamily: 'Inter' }}
+        <CartesianGrid strokeDasharray="2 4" stroke="rgba(255,255,255,0.06)" vertical={false} />
+        <XAxis dataKey="name" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12, fontFamily: 'Poppins' }}
           axisLine={false} tickLine={false} />
-        <YAxis tickFormatter={fmtM} tick={{ fill: '#94A3B8', fontSize: 11, fontFamily: 'Inter' }}
+        <YAxis tickFormatter={fmtM} tick={{ fill: 'rgba(255,255,255,0.35)', fontSize: 11 }}
           axisLine={false} tickLine={false} />
-        <Tooltip content={<Tip />} cursor={{ fill: '#F8FAFC' }} />
-        <Bar dataKey="Orçado"    fill="#1D4ED8" radius={[3,3,0,0]} />
-        <Bar dataKey="Realizado" fill="#16A34A" radius={[3,3,0,0]} />
-        <Bar dataKey="Saldo"     fill="#E2E8F0" radius={[3,3,0,0]} />
+        <Tooltip content={<Tip />} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
+        <Bar dataKey="Orçado"    fill="#65B32E" radius={[4,4,0,0]} />
+        <Bar dataKey="Realizado" fill="#4A9EDB" radius={[4,4,0,0]} />
+        <Bar dataKey="Saldo"     fill="rgba(255,255,255,0.12)" radius={[4,4,0,0]} />
       </BarChart>
     </ResponsiveContainer>
   )
@@ -64,35 +61,29 @@ export function OrcadoVsRealizadoChart({ totals }) {
 
 export function CategoriaChart({ byCategory }) {
   const data = Object.entries(byCategory)
-    .sort((a, b) => b[1].orcado - a[1].orcado)
-    .slice(0, 7)
+    .sort((a, b) => b[1].orcado - a[1].orcado).slice(0, 7)
     .map(([name, v]) => ({
-      name: name.length > 22 ? name.slice(0, 20) + '…' : name,
+      name: name.length > 20 ? name.slice(0, 18) + '…' : name,
       value: Math.round(v.orcado),
     }))
-
   const total = data.reduce((s, d) => s + d.value, 0)
-
   return (
     <ResponsiveContainer width="100%" height={200}>
       <PieChart>
-        <Pie data={data} cx="50%" cy="50%"
-          innerRadius={52} outerRadius={82}
-          dataKey="value" paddingAngle={2} strokeWidth={0}>
-          {data.map((_, i) => (
-            <Cell key={i} fill={CAT_COLORS[i % CAT_COLORS.length]} />
-          ))}
+        <Pie data={data} cx="50%" cy="50%" innerRadius={50} outerRadius={82}
+          dataKey="value" paddingAngle={3} strokeWidth={0}>
+          {data.map((_, i) => <Cell key={i} fill={CAT_COLORS[i % CAT_COLORS.length]} />)}
         </Pie>
         <Tooltip content={({ active, payload }) => {
           if (!active || !payload?.length) return null
           const p = payload[0]
           return (
-            <div style={TIP}>
+            <div style={TIP_STYLE}>
               <div style={{ padding: '8px 14px' }}>
-                <div style={{ fontSize: 11, color: '#64748B', marginBottom: 3 }}>{p.name}</div>
-                <div style={{ fontWeight: 700, color: '#0F172A' }}>{fmt(p.value)}</div>
-                <div style={{ fontSize: 11, color: '#94A3B8' }}>
-                  {(p.value / total * 100).toFixed(1)}% do total
+                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 11, marginBottom: 3 }}>{p.name}</div>
+                <div style={{ fontWeight: 700 }}>{fmt(p.value)}</div>
+                <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11 }}>
+                  {(p.value / total * 100).toFixed(1)}%
                 </div>
               </div>
             </div>
@@ -105,27 +96,23 @@ export function CategoriaChart({ byCategory }) {
 
 export function ImpostoChart({ byCategory }) {
   const data = Object.entries(byCategory)
-    .filter(([, v]) => v.imposto > 0)
-    .sort((a, b) => b[1].imposto - a[1].imposto)
+    .filter(([, v]) => v.imposto > 0).sort((a, b) => b[1].imposto - a[1].imposto)
     .map(([name, v]) => ({
-      name: name.length > 22 ? name.slice(0, 20) + '…' : name,
+      name: name.length > 20 ? name.slice(0, 18) + '…' : name,
       'Base':    Math.round(v.orcado - v.imposto),
       'Imposto': Math.round(v.imposto),
     }))
-
   return (
     <ResponsiveContainer width="100%" height={200}>
-      <BarChart data={data} layout="vertical" barCategoryGap="30%">
-        <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false} />
+      <BarChart data={data} layout="vertical" barCategoryGap="28%">
+        <CartesianGrid strokeDasharray="2 4" stroke="rgba(255,255,255,0.06)" horizontal={false} />
         <XAxis type="number" tickFormatter={fmtM}
-          tick={{ fill: '#94A3B8', fontSize: 11, fontFamily: 'Inter' }}
-          axisLine={false} tickLine={false} />
-        <YAxis type="category" dataKey="name" width={150}
-          tick={{ fill: '#64748B', fontSize: 11, fontFamily: 'Inter' }}
-          axisLine={false} tickLine={false} />
-        <Tooltip content={<Tip />} cursor={{ fill: '#F8FAFC' }} />
-        <Bar dataKey="Base"    fill="#DBEAFE" stackId="a" />
-        <Bar dataKey="Imposto" fill="#F59E0B" stackId="a" radius={[0,3,3,0]} />
+          tick={{ fill: 'rgba(255,255,255,0.35)', fontSize: 11 }} axisLine={false} tickLine={false} />
+        <YAxis type="category" dataKey="name" width={145}
+          tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} axisLine={false} tickLine={false} />
+        <Tooltip content={<Tip />} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
+        <Bar dataKey="Base"    fill="rgba(255,255,255,0.12)" stackId="a" />
+        <Bar dataKey="Imposto" fill="#F5A623" stackId="a" radius={[0,4,4,0]} />
       </BarChart>
     </ResponsiveContainer>
   )

@@ -52,15 +52,44 @@ export default function ItemRow({ item, onUpdate, onRemove }) {
   }
 
   const rowBg = editing ? 'rgba(101,179,46,0.04)' : 'transparent'
-  const rowBorder = editing ? '1px solid rgba(101,179,46,0.25)' : undefined
 
   return (
     <tr
-      style={{ transition: 'background 0.12s', background: rowBg,
-        outline: editing ? '1px solid rgba(101,179,46,0.20)' : 'none' }}
+      style={{ transition: 'background 0.12s', background: rowBg }}
       onMouseEnter={e => { if (!editing) e.currentTarget.style.background = 'var(--surface2)' }}
       onMouseLeave={e => { if (!editing) e.currentTarget.style.background = 'transparent' }}
     >
+
+      {/* AÇÕES — primeira coluna, sempre visível */}
+      <TD>
+        {item.isNew ? (
+          <button onClick={() => onRemove(item.id)} style={{
+            background: 'rgba(224,82,82,0.10)', color: '#E05252',
+            border: '1px solid rgba(224,82,82,0.30)',
+            borderRadius: 6, padding: '4px 10px', fontSize: 12, cursor: 'pointer',
+          }}>Remover</button>
+        ) : editing ? (
+          <div style={{ display: 'flex', gap: 6 }}>
+            <button onClick={saveEdit} style={{
+              padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600,
+              background: 'rgba(101,179,46,0.15)', color: '#65B32E',
+              border: '1px solid rgba(101,179,46,0.35)', cursor: 'pointer',
+            }}>Salvar</button>
+            <button onClick={cancelEdit} style={{
+              padding: '4px 10px', borderRadius: 6, fontSize: 12,
+              background: 'var(--surface2)', color: 'var(--muted)',
+              border: '1px solid var(--border)', cursor: 'pointer',
+            }}>✕</button>
+          </div>
+        ) : (
+          <button onClick={startEdit} style={{
+            padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 500,
+            background: 'var(--surface2)', color: 'var(--muted)',
+            border: '1px solid var(--border)', cursor: 'pointer',
+            whiteSpace: 'nowrap',
+          }}>✏️ Editar</button>
+        )}
+      </TD>
 
       {/* Responsável */}
       <TD>
@@ -226,35 +255,6 @@ export default function ItemRow({ item, onUpdate, onRemove }) {
         />
       </TD>
 
-      {/* Ações — Editar / Salvar / Cancelar */}
-      <TD>
-        {item.isNew ? (
-          <button onClick={() => onRemove(item.id)} style={{
-            background: 'rgba(224,82,82,0.10)', color: '#E05252',
-            border: '1px solid rgba(224,82,82,0.30)',
-            borderRadius: 6, padding: '4px 10px', fontSize: 12,
-          }}>Remover</button>
-        ) : editing ? (
-          <div style={{ display: 'flex', gap: 6 }}>
-            <button onClick={saveEdit} style={{
-              padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600,
-              background: 'rgba(101,179,46,0.15)', color: '#65B32E',
-              border: '1px solid rgba(101,179,46,0.35)', cursor: 'pointer',
-            }}>Salvar</button>
-            <button onClick={cancelEdit} style={{
-              padding: '4px 10px', borderRadius: 6, fontSize: 12,
-              background: 'var(--surface2)', color: 'var(--muted)',
-              border: '1px solid var(--border)', cursor: 'pointer',
-            }}>✕</button>
-          </div>
-        ) : (
-          <button onClick={startEdit} style={{
-            padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 500,
-            background: 'var(--surface2)', color: 'var(--muted)',
-            border: '1px solid var(--border)', cursor: 'pointer',
-          }}>✏️ Editar</button>
-        )}
-      </TD>
     </tr>
   )
 }

@@ -523,12 +523,3 @@ export default function App() {
     </div>
   )
 }
-```
-
----
-
-São só esses 2 arquivos! Depois de colar os dois, rode:
-```
-git add .
-git commit -m "feat: light/dark theme toggle"
-git push

@@ -108,6 +108,8 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1400 }}>
             <thead>
               <tr>
+                <TH>Observações</TH>
+                <TH>Ações</TH
                 <TH>Resp.</TH>
                 <TH>Categoria</TH>
                 <TH>Detalhamento</TH>

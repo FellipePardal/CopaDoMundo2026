@@ -105,11 +105,9 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem }) {
         overflow: 'hidden',
       }}>
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1400 }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1500 }}>
             <thead>
               <tr>
-                <TH>Observações</TH>
-                <TH>Ações</TH
                 <TH>Resp.</TH>
                 <TH>Categoria</TH>
                 <TH>Detalhamento</TH>
@@ -125,6 +123,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem }) {
                 <TH>Status</TH>
                 <TH align="center">Bookado?</TH>
                 <TH>Observações</TH>
+                <TH align="center">Ações</TH>
               </tr>
             </thead>
             <tbody>
@@ -134,7 +133,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem }) {
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={15} style={{ padding: '40px', textAlign: 'center',
+                  <td colSpan={16} style={{ padding: '40px', textAlign: 'center',
                     color: 'var(--muted)', fontSize: 13 }}>
                     Nenhum item encontrado.
                   </td>
@@ -160,7 +159,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem }) {
                     {fmt(t.val)}
                   </td>
                 ))}
-                <td colSpan={4} style={{ borderTop: '2px solid var(--border)' }} />
+                <td colSpan={5} style={{ borderTop: '2px solid var(--border)' }} />
               </tr>
             </tfoot>
           </table>

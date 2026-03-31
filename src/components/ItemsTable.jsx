@@ -108,6 +108,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1500 }}>
             <thead>
               <tr>
+                <TH align="center">Ações</TH>
                 <TH>Resp.</TH>
                 <TH>Categoria</TH>
                 <TH>Detalhamento</TH>
@@ -123,7 +124,6 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem }) {
                 <TH>Status</TH>
                 <TH align="center">Bookado?</TH>
                 <TH>Observações</TH>
-                <TH align="center">Ações</TH>
               </tr>
             </thead>
             <tbody>
@@ -142,7 +142,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem }) {
             </tbody>
             <tfoot>
               <tr style={{ background: 'var(--surface2)' }}>
-                <td colSpan={6} style={{ padding: '11px 13px', fontSize: 12,
+                <td colSpan={7} style={{ padding: '11px 13px', fontSize: 12,
                   fontWeight: 600, color: 'var(--muted)',
                   borderTop: '2px solid var(--border)' }}>
                   {filtered.length} {filtered.length === 1 ? 'item' : 'itens'} exibidos

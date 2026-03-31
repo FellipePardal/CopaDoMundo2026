@@ -97,3 +97,6 @@ input:focus, select:focus {
 select option { background: var(--surface); color: var(--text); }
 button { font-family: var(--font); cursor: pointer; transition: all 0.15s; }
 button:active { transform: scale(0.97); }
+@media (max-width: 768px) {
+  body { font-size: 13px; }
+}

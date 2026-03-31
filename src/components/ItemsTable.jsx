@@ -2,16 +2,30 @@ import React, { useState, useMemo } from 'react'
 import ItemRow from './ItemRow.jsx'
 import { fmt } from '../data/utils.js'
 
-const TH = ({ children, align = 'left', style = {} }) => (
-  <th style={{
-    padding: '11px 14px', fontSize: 11, fontWeight: 600, textAlign: align,
-    textTransform: 'uppercase', letterSpacing: '0.07em',
-    color: 'var(--muted)', background: 'var(--surface2)',
-    borderBottom: '2px solid var(--border)',
-    whiteSpace: 'nowrap', position: 'sticky', top: 0, zIndex: 1,
-    ...style,
-  }}>
-    {children}
+const TH = ({ children, align = 'left', style = {}, sortKey, sortConfig, onSort }) => (
+  <th
+    onClick={sortKey ? () => onSort(sortKey) : undefined}
+    style={{
+      padding: '11px 14px', fontSize: 11, fontWeight: 600, textAlign: align,
+      textTransform: 'uppercase', letterSpacing: '0.07em',
+      color: 'var(--muted)', background: 'var(--surface2)',
+      borderBottom: '2px solid var(--border)',
+      whiteSpace: 'nowrap', position: 'sticky', top: 0, zIndex: 1,
+      cursor: sortKey ? 'pointer' : 'default',
+      userSelect: sortKey ? 'none' : undefined,
+      ...style,
+    }}
+  >
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+      {children}
+      {sortKey && (
+        <span style={{ fontSize: 10, opacity: sortConfig.key === sortKey ? 1 : 0.3 }}>
+          {sortConfig.key === sortKey
+            ? (sortConfig.dir === 'asc' ? '▲' : '▼')
+            : '⇅'}
+        </span>
+      )}
+    </span>
   </th>
 )
 
@@ -30,18 +44,44 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem }) {
   const [filterStatus, setFilterStatus] = useState('Todos')
   const [filterMoeda,  setFilterMoeda]  = useState('Todas')
   const [search,       setSearch]       = useState('')
+  const [sortConfig,   setSortConfig]   = useState({ key: null, dir: 'asc' })
 
-  const filtered = useMemo(() => items.filter(i => {
-    if (filterResp !== 'Todos' && i.resp !== filterResp) return false
-    if (filterStatus !== 'Todos') {
-      const s = i.status || 'Pendente'
-      if (filterStatus === 'Pendente' ? (s !== '' && s !== 'Pendente') : s !== filterStatus) return false
+  const handleSort = (key) => {
+    setSortConfig(prev =>
+      prev.key === key
+        ? { key, dir: prev.dir === 'asc' ? 'desc' : 'asc' }
+        : { key, dir: 'asc' }
+    )
+  }
+
+  const filtered = useMemo(() => {
+    const list = items.filter(i => {
+      if (filterResp !== 'Todos' && i.resp !== filterResp) return false
+      if (filterStatus !== 'Todos') {
+        const s = i.status || 'Pendente'
+        if (filterStatus === 'Pendente' ? (s !== '' && s !== 'Pendente') : s !== filterStatus) return false
+      }
+      if (filterMoeda !== 'Todas' && i.moeda !== filterMoeda) return false
+      if (search && !i.det.toLowerCase().includes(search.toLowerCase()) &&
+          !i.cat.toLowerCase().includes(search.toLowerCase())) return false
+      return true
+    })
+
+    if (sortConfig.key) {
+      list.sort((a, b) => {
+        let va = a[sortConfig.key], vb = b[sortConfig.key]
+        if (typeof va === 'string') {
+          va = (va || '').toLowerCase()
+          vb = (vb || '').toLowerCase()
+          return sortConfig.dir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va)
+        }
+        va = va ?? 0; vb = vb ?? 0
+        return sortConfig.dir === 'asc' ? va - vb : vb - va
+      })
     }
-    if (filterMoeda !== 'Todas' && i.moeda !== filterMoeda) return false
-    if (search && !i.det.toLowerCase().includes(search.toLowerCase()) &&
-        !i.cat.toLowerCase().includes(search.toLowerCase())) return false
-    return true
-  }), [items, filterResp, filterStatus, filterMoeda, search])
+
+    return list
+  }, [items, filterResp, filterStatus, filterMoeda, search, sortConfig])
 
   const totals = useMemo(() => ({
     orcado:    filtered.reduce((s, i) => s + i.orcado, 0),
@@ -110,20 +150,20 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1400 }}>
             <thead>
               <tr>
-                <TH>Resp.</TH>
-                <TH>Categoria</TH>
-                <TH>Detalhamento</TH>
-                <TH align="center">Moeda</TH>
-                <TH align="center">Qtd</TH>
-                <TH align="center">Alíq.</TH>
-                <TH align="right">Orçado (R$)</TH>
-                <TH align="right">Imposto (R$)</TH>
-                <TH align="right">Sem Imposto (R$)</TH>
-                <TH align="right">Realizado (R$)</TH>
-                <TH align="right">Diferença (R$)</TH>
-                <TH align="center">% Exec.</TH>
-                <TH>Status</TH>
-                <TH align="center">Bookado?</TH>
+                <TH sortKey="resp" sortConfig={sortConfig} onSort={handleSort}>Resp.</TH>
+                <TH sortKey="cat" sortConfig={sortConfig} onSort={handleSort}>Categoria</TH>
+                <TH sortKey="det" sortConfig={sortConfig} onSort={handleSort}>Detalhamento</TH>
+                <TH align="center" sortKey="moeda" sortConfig={sortConfig} onSort={handleSort}>Moeda</TH>
+                <TH align="center" sortKey="qtd" sortConfig={sortConfig} onSort={handleSort}>Qtd</TH>
+                <TH align="center" sortKey="aliq" sortConfig={sortConfig} onSort={handleSort}>Alíq.</TH>
+                <TH align="right" sortKey="orcado" sortConfig={sortConfig} onSort={handleSort}>Orçado (R$)</TH>
+                <TH align="right" sortKey="imposto" sortConfig={sortConfig} onSort={handleSort}>Imposto (R$)</TH>
+                <TH align="right" sortKey="semImp" sortConfig={sortConfig} onSort={handleSort}>Sem Imposto (R$)</TH>
+                <TH align="right" sortKey="realizado" sortConfig={sortConfig} onSort={handleSort}>Realizado (R$)</TH>
+                <TH align="right" sortKey="diff" sortConfig={sortConfig} onSort={handleSort}>Diferença (R$)</TH>
+                <TH align="center" sortKey="pctExec" sortConfig={sortConfig} onSort={handleSort}>% Exec.</TH>
+                <TH sortKey="status" sortConfig={sortConfig} onSort={handleSort}>Status</TH>
+                <TH align="center" sortKey="bookado" sortConfig={sortConfig} onSort={handleSort}>Bookado?</TH>
                 <TH>Observações</TH>
               </tr>
             </thead>

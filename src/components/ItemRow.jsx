@@ -186,16 +186,23 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
 
       {/* Moeda */}
       <TD align="center">
-        <span style={{
-          padding: '2px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700,
-          background: item.moeda === 'Dólar'
-            ? 'rgba(74,158,219,0.12)' : 'rgba(101,179,46,0.12)',
-          color: item.moeda === 'Dólar' ? '#4A9EDB' : '#65B32E',
-          border: `1px solid ${item.moeda === 'Dólar'
-            ? 'rgba(74,158,219,0.30)' : 'rgba(101,179,46,0.30)'}`,
-        }}>
-          {item.moeda === 'Dólar' ? 'USD' : 'BRL'}
-        </span>
+        <select
+          value={item.moeda}
+          onChange={e => onUpdate(item.id, 'moeda', e.target.value)}
+          style={{
+            padding: '2px 6px', borderRadius: 4, fontSize: 10, fontWeight: 700,
+            background: item.moeda === 'Dólar'
+              ? 'rgba(74,158,219,0.12)' : 'rgba(101,179,46,0.12)',
+            color: item.moeda === 'Dólar' ? '#4A9EDB' : '#65B32E',
+            border: `1px solid ${item.moeda === 'Dólar'
+              ? 'rgba(74,158,219,0.30)' : 'rgba(101,179,46,0.30)'}`,
+            cursor: 'pointer',
+            appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none',
+          }}
+        >
+          <option value="Dólar">USD</option>
+          <option value="Real">BRL</option>
+        </select>
       </TD>
 
       {/* Qtd */}
@@ -271,8 +278,8 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
       {item.moeda === 'Dólar' ? (
         <TD align="right">
           <input
-            type="number"
-            step="0.01"
+            type="text"
+            inputMode="decimal"
             defaultValue={item.realizadoUsd || ''}
             onBlur={e => {
               const v = parseFloat(e.target.value.replace(',', '.')) || 0
@@ -285,8 +292,6 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
               background: 'var(--surface2)',
               border: '1px solid var(--border)',
               color: '#4A9EDB',
-              MozAppearance: 'textfield',
-              appearance: 'textfield',
             }}
           />
         </TD>
@@ -296,8 +301,8 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
       {item.moeda === 'Dólar' ? (
         <TD align="right">
           <input
-            type="number"
-            step="0.01"
+            type="text"
+            inputMode="decimal"
             defaultValue={item.cotacaoReal || ''}
             onBlur={e => {
               const v = parseFloat(e.target.value.replace(',', '.')) || 0
@@ -310,8 +315,6 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
               background: 'var(--surface2)',
               border: '1px solid var(--border)',
               color: 'var(--text)',
-              MozAppearance: 'textfield',
-              appearance: 'textfield',
             }}
           />
         </TD>

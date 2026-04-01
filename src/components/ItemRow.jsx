@@ -34,12 +34,19 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
       aliq:         item.aliq,
       qtd:          item.qtd,
       valorUn:      item.valorUn,
+      realizadoUsd: item.realizadoUsd || (item.moeda === 'Dólar' ? item.valorUn * item.qtd : 0) || '',
+      cotacaoReal:  item.cotacaoReal || '',
     })
     setEditing(true)
   }
 
   function saveEdit() {
-    Object.entries(draft).forEach(([field, value]) => {
+    const toSave = { ...draft }
+    if (toSave.realizadoUsd !== undefined)
+      toSave.realizadoUsd = parseFloat(String(toSave.realizadoUsd).replace(',', '.')) || 0
+    if (toSave.cotacaoReal !== undefined)
+      toSave.cotacaoReal = parseFloat(String(toSave.cotacaoReal).replace(',', '.')) || 0
+    Object.entries(toSave).forEach(([field, value]) => {
       onUpdate(item.id, field, value)
     })
     setEditing(false)
@@ -276,54 +283,56 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
 
       {/* Realizado USD — só para itens em dólar */}
       {item.moeda === 'Dólar' ? (
-        <TD align="right">
-          <input
-            type="text"
-            inputMode="decimal"
-            defaultValue={item.realizadoUsd || (item.valorUn * item.qtd) || ''}
-            onBlur={e => {
-              const v = parseFloat(e.target.value.replace(',', '.')) || 0
-              onUpdate(item.id, 'realizadoUsd', v)
-            }}
-            placeholder="—"
-            style={{
-              width: 100, fontSize: 12, textAlign: 'right',
-              fontFamily: 'var(--mono)',
-              background: 'var(--surface2)',
-              border: '1px solid var(--border)',
-              color: '#4A9EDB',
-            }}
-          />
+        <TD align="right" mono style={{ color: '#4A9EDB' }}>
+          {editing
+            ? <input
+                type="text"
+                inputMode="decimal"
+                value={draft.realizadoUsd ?? ''}
+                onChange={e => setDraft(d => ({ ...d, realizadoUsd: e.target.value }))}
+                placeholder="—"
+                style={{
+                  width: 100, fontSize: 12, textAlign: 'right',
+                  fontFamily: 'var(--mono)',
+                  background: 'var(--surface2)',
+                  border: '1px solid var(--border)',
+                  color: '#4A9EDB',
+                }}
+              />
+            : (item.realizadoUsd || item.valorUn * item.qtd || null)
+              ? `$ ${Number(item.realizadoUsd || item.valorUn * item.qtd).toLocaleString('en-US')}`
+              : '—'
+          }
         </TD>
       ) : <TD align="center" style={{ color: 'var(--muted2)' }}>—</TD>}
 
       {/* Cotação Transação — só para itens em dólar */}
       {item.moeda === 'Dólar' ? (
-        <TD align="right">
-          <input
-            type="text"
-            inputMode="decimal"
-            defaultValue={item.cotacaoReal || ''}
-            onBlur={e => {
-              const v = parseFloat(e.target.value.replace(',', '.')) || 0
-              onUpdate(item.id, 'cotacaoReal', v)
-            }}
-            placeholder={String(COTACAO)}
-            style={{
-              width: 75, fontSize: 12, textAlign: 'right',
-              fontFamily: 'var(--mono)',
-              background: 'var(--surface2)',
-              border: '1px solid var(--border)',
-              color: 'var(--text)',
-            }}
-          />
+        <TD align="right" mono>
+          {editing
+            ? <input
+                type="text"
+                inputMode="decimal"
+                value={draft.cotacaoReal ?? ''}
+                onChange={e => setDraft(d => ({ ...d, cotacaoReal: e.target.value }))}
+                placeholder={String(COTACAO)}
+                style={{
+                  width: 75, fontSize: 12, textAlign: 'right',
+                  fontFamily: 'var(--mono)',
+                  background: 'var(--surface2)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                }}
+              />
+            : item.cotacaoReal ? item.cotacaoReal.toFixed(2) : '—'
+          }
         </TD>
       ) : <TD align="center" style={{ color: 'var(--muted2)' }}>—</TD>}
 
       {/* Diff Câmbio — diferença entre cotação real e fixa (5.6) aplicada ao valor USD */}
       {(() => {
         const isUsd = item.moeda === 'Dólar'
-        const usd = item.realizadoUsd || 0
+        const usd = item.realizadoUsd || (isUsd ? item.valorUn * item.qtd : 0) || 0
         const cot = item.cotacaoReal || 0
         if (!isUsd || usd === 0 || cot === 0) {
           return <TD align="center" style={{ color: 'var(--muted2)' }}>—</TD>

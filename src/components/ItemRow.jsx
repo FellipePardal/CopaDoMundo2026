@@ -14,9 +14,11 @@ const TD = ({ children, align = 'left', mono = false, style = {} }) => (
   </td>
 )
 
-export default function ItemRow({ item, onUpdate, onRemove }) {
+export default function ItemRow({ item, onUpdate, onRemove, categories = [], showTaxCols = false }) {
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState({})
+  const [addingCat, setAddingCat] = useState(false)
+  const [newCat, setNewCat] = useState('')
 
   const diff = item.realizado > 0 ? item.realizado - item.orcado : null
   const diffColor = diff === null ? 'var(--muted2)'
@@ -45,6 +47,8 @@ export default function ItemRow({ item, onUpdate, onRemove }) {
   function cancelEdit() {
     setEditing(false)
     setDraft({})
+    setAddingCat(false)
+    setNewCat('')
   }
 
   function handleReal(e) {
@@ -107,11 +111,60 @@ export default function ItemRow({ item, onUpdate, onRemove }) {
       </TD>
 
       {/* Categoria */}
-      <TD style={{ color: 'var(--muted)', maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-        {editing
-          ? <input value={draft.cat} onChange={e => setDraft(d => ({ ...d, cat: e.target.value }))}
-              style={{ width: 130, fontSize: 12 }} />
-          : item.cat}
+      <TD style={{ color: 'var(--muted)', maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        {editing ? (
+          addingCat ? (
+            <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+              <input
+                value={newCat}
+                onChange={e => setNewCat(e.target.value)}
+                placeholder="Nova categoria..."
+                autoFocus
+                style={{ width: 110, fontSize: 12 }}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && newCat.trim()) {
+                    setDraft(d => ({ ...d, cat: newCat.trim() }))
+                    setAddingCat(false)
+                    setNewCat('')
+                  }
+                  if (e.key === 'Escape') { setAddingCat(false); setNewCat('') }
+                }}
+              />
+              <button onClick={() => {
+                if (newCat.trim()) {
+                  setDraft(d => ({ ...d, cat: newCat.trim() }))
+                  setAddingCat(false)
+                  setNewCat('')
+                }
+              }} style={{ fontSize: 11, padding: '2px 6px', cursor: 'pointer',
+                background: 'rgba(101,179,46,0.15)', color: '#65B32E',
+                border: '1px solid rgba(101,179,46,0.35)', borderRadius: 4 }}>✓</button>
+              <button onClick={() => { setAddingCat(false); setNewCat('') }}
+                style={{ fontSize: 11, padding: '2px 6px', cursor: 'pointer',
+                  background: 'var(--surface2)', color: 'var(--muted)',
+                  border: '1px solid var(--border)', borderRadius: 4 }}>✕</button>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+              <select
+                value={draft.cat}
+                onChange={e => {
+                  if (e.target.value === '__add_new__') { setAddingCat(true); return }
+                  setDraft(d => ({ ...d, cat: e.target.value }))
+                }}
+                style={{ width: 130, fontSize: 12, padding: '4px 6px',
+                  background: 'var(--surface2)', border: '1px solid var(--border)',
+                  color: 'var(--text)', borderRadius: 6 }}
+              >
+                <option value="">— Selecionar —</option>
+                {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                <option value="__add_new__">+ Nova categoria...</option>
+              </select>
+            </div>
+          )
+        ) : (
+          <span title={item.cat}>{item.cat || '—'}</span>
+        )}
       </TD>
 
       {/* Fornecedores */}
@@ -174,17 +227,24 @@ export default function ItemRow({ item, onUpdate, onRemove }) {
           : <span style={{ fontWeight: 600, color: 'var(--text)' }}>{fmt(item.orcado)}</span>}
       </TD>
 
+      {/* Placeholder da coluna toggle "Impostos" */}
+      <TD />
+
       {/* Imposto */}
-      <TD align="right" mono style={{
-        color: item.imposto > 0 ? '#F5A623' : 'var(--muted2)',
-      }}>
-        {item.imposto > 0 ? fmt(item.imposto) : '—'}
-      </TD>
+      {showTaxCols && (
+        <TD align="right" mono style={{
+          color: item.imposto > 0 ? '#F5A623' : 'var(--muted2)',
+        }}>
+          {item.imposto > 0 ? fmt(item.imposto) : '—'}
+        </TD>
+      )}
 
       {/* Sem Imposto */}
-      <TD align="right" mono style={{ color: 'var(--muted)' }}>
-        {item.aliq > 0 ? fmt(item.semImp) : '—'}
-      </TD>
+      {showTaxCols && (
+        <TD align="right" mono style={{ color: 'var(--muted)' }}>
+          {item.aliq > 0 ? fmt(item.semImp) : '—'}
+        </TD>
+      )}
 
       {/* Realizado */}
       <TD align="right">

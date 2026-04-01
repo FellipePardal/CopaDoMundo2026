@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import ItemRow from './ItemRow.jsx'
 import { fmt } from '../data/utils.js'
+import { INITIAL_ITEMS } from '../data/items.js'
 
 
 const TH = ({ children, align = 'left', style = {} }) => (
@@ -29,6 +30,15 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
   const [filterStatus, setFilterStatus] = useState('Todos')
   const [filterMoeda,  setFilterMoeda]  = useState('Todas')
   const [search,       setSearch]       = useState('')
+  const [showTaxCols,  setShowTaxCols]  = useState(false)
+
+  // Categorias únicas extraídas dos dados iniciais + itens atuais
+  const categories = useMemo(() => {
+    const set = new Set()
+    INITIAL_ITEMS.forEach(i => { if (i.cat) set.add(i.cat) })
+    items.forEach(i => { if (i.cat) set.add(i.cat) })
+    return [...set].sort()
+  }, [items])
 
   const filtered = useMemo(() => items.filter(i => {
     if (filterResp !== 'Todos' && i.resp !== filterResp) return false
@@ -328,8 +338,22 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                   <TH align="center">Qtd</TH>
                   <TH align="center">Alíq.</TH>
                   <TH align="right">Orçado (R$)</TH>
-                  <TH align="right">Imposto (R$)</TH>
-                  <TH align="right">Sem Imposto (R$)</TH>
+                  <TH align="center" style={{ cursor: 'pointer', userSelect: 'none' }}>
+                    <span
+                      onClick={() => setShowTaxCols(v => !v)}
+                      title={showTaxCols ? 'Ocultar colunas de imposto' : 'Expandir colunas de imposto'}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                    >
+                      <span style={{
+                        display: 'inline-block', fontSize: 9,
+                        transform: showTaxCols ? 'rotate(90deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.15s',
+                      }}>▶</span>
+                      Impostos
+                    </span>
+                  </TH>
+                  {showTaxCols && <TH align="right">Imposto (R$)</TH>}
+                  {showTaxCols && <TH align="right">Sem Imposto (R$)</TH>}
                   <TH align="right">Realizado (R$)</TH>
                   <TH align="right">Diferença (R$)</TH>
                   <TH align="center">% Exec.</TH>
@@ -341,11 +365,12 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
               <tbody>
                 {filtered.map(item => (
                   <ItemRow key={item.id} item={item}
-                    onUpdate={updateItem} onRemove={removeItem} />
+                    onUpdate={updateItem} onRemove={removeItem}
+                    categories={categories} showTaxCols={showTaxCols} />
                 ))}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={17} style={{ padding: '40px', textAlign: 'center',
+                    <td colSpan={showTaxCols ? 18 : 16} style={{ padding: '40px', textAlign: 'center',
                       color: 'var(--muted)', fontSize: 13 }}>
                       Nenhum item encontrado.
                     </td>
@@ -359,18 +384,32 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                     borderTop: '2px solid var(--border)' }}>
                     {filtered.length} {filtered.length === 1 ? 'item' : 'itens'} exibidos
                   </td>
-                  {[
-                    { val: totals.orcado,    color: 'var(--text)'  },
-                    { val: totals.imposto,   color: '#F5A623'      },
-                    { val: totals.semImp,    color: 'var(--muted)' },
-                    { val: totals.realizado, color: '#65B32E'      },
-                  ].map((t, i) => (
-                    <td key={i} style={{ padding: '11px 13px', textAlign: 'right',
+                  <td style={{ padding: '11px 13px', textAlign: 'right',
+                    fontSize: 13, fontWeight: 700, fontFamily: 'var(--mono)',
+                    color: 'var(--text)', borderTop: '2px solid var(--border)' }}>
+                    {fmt(totals.orcado)}
+                  </td>
+                  {/* Coluna do toggle "Impostos" — vazia no footer */}
+                  <td style={{ borderTop: '2px solid var(--border)' }} />
+                  {showTaxCols && (
+                    <td style={{ padding: '11px 13px', textAlign: 'right',
                       fontSize: 13, fontWeight: 700, fontFamily: 'var(--mono)',
-                      color: t.color, borderTop: '2px solid var(--border)' }}>
-                      {fmt(t.val)}
+                      color: '#F5A623', borderTop: '2px solid var(--border)' }}>
+                      {fmt(totals.imposto)}
                     </td>
-                  ))}
+                  )}
+                  {showTaxCols && (
+                    <td style={{ padding: '11px 13px', textAlign: 'right',
+                      fontSize: 13, fontWeight: 700, fontFamily: 'var(--mono)',
+                      color: 'var(--muted)', borderTop: '2px solid var(--border)' }}>
+                      {fmt(totals.semImp)}
+                    </td>
+                  )}
+                  <td style={{ padding: '11px 13px', textAlign: 'right',
+                    fontSize: 13, fontWeight: 700, fontFamily: 'var(--mono)',
+                    color: '#65B32E', borderTop: '2px solid var(--border)' }}>
+                    {fmt(totals.realizado)}
+                  </td>
                   <td colSpan={5} style={{ borderTop: '2px solid var(--border)' }} />
                 </tr>
               </tfoot>

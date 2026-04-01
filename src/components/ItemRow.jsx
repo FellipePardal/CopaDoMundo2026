@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { STATUS_OPTIONS, fmt, fmtAliq, fmtPct } from '../data/utils.js'
+import { COTACAO } from '../data/items.js'
 
 const TD = ({ children, align = 'left', mono = false, style = {} }) => (
   <td style={{
@@ -265,6 +266,73 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
           }}
         />
       </TD>
+
+      {/* Realizado USD — só para itens em dólar */}
+      {item.moeda === 'Dólar' ? (
+        <TD align="right">
+          <input
+            type="number"
+            step="0.01"
+            defaultValue={item.realizadoUsd || ''}
+            onBlur={e => {
+              const v = parseFloat(e.target.value.replace(',', '.')) || 0
+              onUpdate(item.id, 'realizadoUsd', v)
+            }}
+            placeholder="—"
+            style={{
+              width: 100, fontSize: 12, textAlign: 'right',
+              fontFamily: 'var(--mono)',
+              background: 'var(--surface2)',
+              border: '1px solid var(--border)',
+              color: '#4A9EDB',
+              MozAppearance: 'textfield',
+              appearance: 'textfield',
+            }}
+          />
+        </TD>
+      ) : <TD align="center" style={{ color: 'var(--muted2)' }}>—</TD>}
+
+      {/* Cotação Transação — só para itens em dólar */}
+      {item.moeda === 'Dólar' ? (
+        <TD align="right">
+          <input
+            type="number"
+            step="0.01"
+            defaultValue={item.cotacaoReal || ''}
+            onBlur={e => {
+              const v = parseFloat(e.target.value.replace(',', '.')) || 0
+              onUpdate(item.id, 'cotacaoReal', v)
+            }}
+            placeholder={String(COTACAO)}
+            style={{
+              width: 75, fontSize: 12, textAlign: 'right',
+              fontFamily: 'var(--mono)',
+              background: 'var(--surface2)',
+              border: '1px solid var(--border)',
+              color: 'var(--text)',
+              MozAppearance: 'textfield',
+              appearance: 'textfield',
+            }}
+          />
+        </TD>
+      ) : <TD align="center" style={{ color: 'var(--muted2)' }}>—</TD>}
+
+      {/* Diff Câmbio — diferença entre cotação real e fixa (5.6) aplicada ao valor USD */}
+      {(() => {
+        const isUsd = item.moeda === 'Dólar'
+        const usd = item.realizadoUsd || 0
+        const cot = item.cotacaoReal || 0
+        if (!isUsd || usd === 0 || cot === 0) {
+          return <TD align="center" style={{ color: 'var(--muted2)' }}>—</TD>
+        }
+        const diffCambio = Math.round(usd * (cot - COTACAO))
+        const color = diffCambio === 0 ? 'var(--muted)' : diffCambio > 0 ? '#E05252' : '#65B32E'
+        return (
+          <TD align="right" mono style={{ color, fontWeight: 600 }}>
+            {(diffCambio > 0 ? '+' : '') + fmt(diffCambio)}
+          </TD>
+        )
+      })()}
 
       {/* Diferença */}
       <TD align="right" mono style={{

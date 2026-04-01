@@ -27,14 +27,16 @@ function fromDb(row) {
     aliq:      Number(row.aliq),
     orcado:    Number(row.orcado),
     bookado:   row.bookado,
-    realizado: Number(row.realizado) || 0,
-    status:    row.status || '',
-    obs:       row.obs    || '',
-    isNew:     row.is_new || false,
+    realizado:    Number(row.realizado) || 0,
+    realizadoUsd: Number(row.realizado_usd) || 0,
+    cotacaoReal:  Number(row.cotacao_real) || 0,
+    status:       row.status || '',
+    obs:          row.obs    || '',
+    isNew:        row.is_new || false,
   }
 }
 
-const FIELD_MAP = { catV2: 'cat_v2', valorUn: 'valor_un', isNew: 'is_new' }
+const FIELD_MAP = { catV2: 'cat_v2', valorUn: 'valor_un', isNew: 'is_new', realizadoUsd: 'realizado_usd', cotacaoReal: 'cotacao_real' }
 const toDbField = (f) => FIELD_MAP[f] || f
 
 export function useStore() {
@@ -97,7 +99,8 @@ export function useStore() {
     const tempItem = {
       id: tempId, resp, cat: '', catV2: '', fornecedores: '', det: '',
       moeda: 'Real', qtd: 1, valorUn: 0, aliq: 0, orcado: 0,
-      realizado: 0, status: '', obs: '', bookado: '', isNew: true,
+      realizado: 0, realizadoUsd: 0, cotacaoReal: 0,
+      status: '', obs: '', bookado: '', isNew: true,
     }
     setItems(prev => [...prev, tempItem])
 
@@ -106,7 +109,8 @@ export function useStore() {
       .insert({
         resp, cat: '', cat_v2: '', fornecedores: '', det: '',
         moeda: 'Real', qtd: 1, valor_un: 0, aliq: 0, orcado: 0,
-        realizado: 0, status: '', obs: '', bookado: '', is_new: true,
+        realizado: 0, realizado_usd: 0, cotacao_real: 0,
+        status: '', obs: '', bookado: '', is_new: true,
       })
       .select()
       .single()
@@ -141,10 +145,12 @@ export function useStore() {
       aliq:       i.aliq,
       orcado:     i.orcado,
       bookado:    i.bookado,
-      realizado:  i.realizado || 0,
-      status:     i.status    || '',
-      obs:        i.obs       || '',
-      is_new:     i.isNew     || false,
+      realizado:      i.realizado || 0,
+      realizado_usd:  i.realizadoUsd || 0,
+      cotacao_real:   i.cotacaoReal || 0,
+      status:         i.status    || '',
+      obs:            i.obs       || '',
+      is_new:         i.isNew     || false,
     }))
 
     const { error } = await supabase

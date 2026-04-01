@@ -326,7 +326,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
           overflow: 'hidden',
         }}>
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1500 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1800 }}>
               <thead>
                 <tr>
                   <TH align="center">Ações</TH>
@@ -355,6 +355,9 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                   {showTaxCols && <TH align="right">Imposto (R$)</TH>}
                   {showTaxCols && <TH align="right">Sem Imposto (R$)</TH>}
                   <TH align="right">Realizado (R$)</TH>
+                  <TH align="right">Real. (USD)</TH>
+                  <TH align="right">Cotação Trans.</TH>
+                  <TH align="right">Diff Câmbio</TH>
                   <TH align="right">Diferença (R$)</TH>
                   <TH align="center">% Exec.</TH>
                   <TH>Status</TH>
@@ -369,7 +372,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                 ))}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={showTaxCols ? 17 : 15} style={{ padding: '40px', textAlign: 'center',
+                    <td colSpan={showTaxCols ? 20 : 18} style={{ padding: '40px', textAlign: 'center',
                       color: 'var(--muted)', fontSize: 13 }}>
                       Nenhum item encontrado.
                     </td>
@@ -409,7 +412,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                     color: '#65B32E', borderTop: '2px solid var(--border)' }}>
                     {fmt(totals.realizado)}
                   </td>
-                  <td colSpan={4} style={{ borderTop: '2px solid var(--border)' }} />
+                  <td colSpan={7} style={{ borderTop: '2px solid var(--border)' }} />
                 </tr>
               </tfoot>
             </table>

@@ -358,7 +358,6 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                   <TH align="right">Diferença (R$)</TH>
                   <TH align="center">% Exec.</TH>
                   <TH>Status</TH>
-                  <TH align="center">Bookado?</TH>
                   <TH>Observações</TH>
                 </tr>
               </thead>
@@ -370,7 +369,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                 ))}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={showTaxCols ? 18 : 16} style={{ padding: '40px', textAlign: 'center',
+                    <td colSpan={showTaxCols ? 17 : 15} style={{ padding: '40px', textAlign: 'center',
                       color: 'var(--muted)', fontSize: 13 }}>
                       Nenhum item encontrado.
                     </td>
@@ -410,7 +409,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                     color: '#65B32E', borderTop: '2px solid var(--border)' }}>
                     {fmt(totals.realizado)}
                   </td>
-                  <td colSpan={5} style={{ borderTop: '2px solid var(--border)' }} />
+                  <td colSpan={4} style={{ borderTop: '2px solid var(--border)' }} />
                 </tr>
               </tfoot>
             </table>

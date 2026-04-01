@@ -74,9 +74,10 @@ body {
   transition: background 0.2s, color 0.2s;
 }
 
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar { width: 6px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--surface3); border-radius: 10px; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted2); }
 
 input, select, textarea {
   font-family: var(--font);

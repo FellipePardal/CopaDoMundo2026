@@ -22,7 +22,7 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
 
   const diff = item.realizado > 0 ? item.realizado - item.orcado : null
   const diffColor = diff === null ? 'var(--muted2)'
-    : diff <= 0 ? '#65B32E' : '#E05252'
+    : diff === 0 ? 'var(--muted)' : diff < 0 ? '#65B32E' : '#E05252'
 
   function startEdit() {
     setDraft({
@@ -296,17 +296,6 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
             <option key={o.value} value={o.value}>{o.label}</option>
           ))}
         </select>
-      </TD>
-
-      {/* Bookado */}
-      <TD align="center">
-        <span style={{
-          fontSize: 12, fontWeight: 600,
-          color: item.bookado === 'Sim' ? '#65B32E'
-               : item.bookado === 'Não' ? '#E05252' : 'var(--muted2)',
-        }}>
-          {!item.bookado || item.bookado === 'nan' ? '—' : item.bookado}
-        </span>
       </TD>
 
       {/* Observações */}

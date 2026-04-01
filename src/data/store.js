@@ -42,6 +42,7 @@ export function useStore() {
   const saveTimer = useRef({})
 
   useEffect(() => {
+    // Carga inicial
     supabase
       .from('items')
       .select('*')
@@ -51,6 +52,25 @@ export function useStore() {
         else setItems(data.map(fromDb))
         setLoading(false)
       })
+
+    // Tempo real — atualiza automaticamente quando qualquer usuário muda algo
+    const channel = supabase
+      .channel('items-realtime')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'items' }, (payload) => {
+        setItems(prev => prev.map(i => i.id === payload.new.id ? fromDb(payload.new) : i))
+      })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'items' }, (payload) => {
+        setItems(prev => {
+          if (prev.find(i => i.id === payload.new.id)) return prev
+          return [...prev, fromDb(payload.new)].sort((a, b) => a.id - b.id)
+        })
+      })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'items' }, (payload) => {
+        setItems(prev => prev.filter(i => i.id !== payload.old.id))
+      })
+      .subscribe()
+
+    return () => supabase.removeChannel(channel)
   }, [])
 
   const updateItem = useCallback((id, field, value) => {

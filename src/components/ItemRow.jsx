@@ -260,6 +260,8 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
             background: 'var(--surface2)',
             border: '1px solid var(--border)',
             color: 'var(--text)',
+            MozAppearance: 'textfield',
+            appearance: 'textfield',
           }}
         />
       </TD>
@@ -268,7 +270,7 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
       <TD align="right" mono style={{
         color: diffColor, fontWeight: diff !== null ? 600 : 400,
       }}>
-        {diff !== null ? (diff > 0 ? '+' : '') + fmt(diff) : '—'}
+        {diff !== null ? (diff > 0 ? '+' : '') + fmt(diff === 0 ? 0 : diff) : '—'}
       </TD>
 
       {/* % Exec */}

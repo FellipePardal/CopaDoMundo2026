@@ -20,9 +20,9 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
   const [addingCat, setAddingCat] = useState(false)
   const [newCat, setNewCat] = useState('')
 
-  const diff = item.realizado > 0 ? Math.round((item.realizado - item.orcado) * 100) / 100 : null
+  const diff = item.realizado > 0 ? Math.round(item.realizado - item.orcado) : null
   const diffColor = diff === null ? 'var(--muted2)'
-    : Math.abs(diff) < 0.01 ? 'var(--muted)' : diff < 0 ? '#65B32E' : '#E05252'
+    : diff === 0 ? 'var(--muted)' : diff < 0 ? '#65B32E' : '#E05252'
 
   function startEdit() {
     setDraft({

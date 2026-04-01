@@ -200,8 +200,8 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
             appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none',
           }}
         >
-          <option value="Dólar">USD</option>
-          <option value="Real">BRL</option>
+          <option value="Dólar" style={{ background: 'var(--surface)', color: '#4A9EDB' }}>USD</option>
+          <option value="Real" style={{ background: 'var(--surface)', color: '#65B32E' }}>BRL</option>
         </select>
       </TD>
 

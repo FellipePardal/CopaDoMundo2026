@@ -232,10 +232,10 @@ export default function App() {
             <Card style={{ marginBottom: isMobile ? 14 : 20, padding: isMobile ? '16px' : '22px 24px' }}>
               <CardTitle>Progresso de Execução</CardTitle>
               {Object.entries(totals).map(([resp, t]) => (
-                <ProgressBar key={resp} label={resp}
+                <ProgressBar key={resp} label={resp === 'João Crispim' ? 'Operações' : 'Engenharia'}
                   pct={t.pctExec} realizado={t.realizado} orcado={t.orcado}
                   color={resp === 'João Crispim' ? '#65B32E' : '#4A9EDB'}
-                  initials={resp === 'João Crispim' ? 'JC' : 'IV'}
+                  initials={resp === 'João Crispim' ? 'OP' : 'ENG'}
                 />
               ))}
             </Card>

@@ -40,7 +40,7 @@ function Tip({ active, payload, label }) {
 
 export function OrcadoVsRealizadoChart({ totals }) {
   const data = Object.entries(totals).map(([resp, t]) => ({
-    name: resp === 'João Crispim' ? 'J. Crispim' : 'I. Souza',
+    name: resp === 'João Crispim' ? 'Operações' : 'Engenharia',
     'Orçado':    Math.round(t.orcado),
     'Realizado': Math.round(t.realizado),
     'Saldo':     Math.round(Math.max(0, t.saldo)),

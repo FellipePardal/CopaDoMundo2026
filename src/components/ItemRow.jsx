@@ -280,7 +280,7 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
           <input
             type="text"
             inputMode="decimal"
-            defaultValue={item.realizadoUsd || ''}
+            defaultValue={item.realizadoUsd || (item.valorUn * item.qtd) || ''}
             onBlur={e => {
               const v = parseFloat(e.target.value.replace(',', '.')) || 0
               onUpdate(item.id, 'realizadoUsd', v)

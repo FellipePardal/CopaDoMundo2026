@@ -59,7 +59,7 @@ function useIsMobile() {
 }
 
 export default function App() {
-  const { items, updateItem, addItem, removeItem, totals, grand, byCategory, byStatus } = useStore()
+  const { items, updateItem, addItem, removeItem, syncToSupabase, totals, grand, byCategory, byStatus } = useStore()
   const [activeTab, setActiveTab] = useState('overview')
   const [theme, setTheme] = useState('light')
   const [mobileMenu, setMobileMenu] = useState(false)
@@ -416,7 +416,7 @@ export default function App() {
               </p>
             </div>
             <ItemsTable items={items} updateItem={updateItem} addItem={addItem}
-              removeItem={removeItem} isMobile={isMobile} />
+              removeItem={removeItem} syncToSupabase={syncToSupabase} isMobile={isMobile} />
           </>
         )}
 

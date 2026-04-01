@@ -24,20 +24,11 @@ const Pill = ({ label, active, onClick }) => (
   }}>{label}</button>
 )
 
-export default function ItemsTable({ items, updateItem, addItem, removeItem, syncToSupabase, isMobile }) {
+export default function ItemsTable({ items, updateItem, addItem, removeItem, isMobile }) {
   const [filterResp,   setFilterResp]   = useState('Todos')
   const [filterStatus, setFilterStatus] = useState('Todos')
   const [filterMoeda,  setFilterMoeda]  = useState('Todas')
   const [search,       setSearch]       = useState('')
-  const [syncing,      setSyncing]      = useState(false)
-
-  async function handleSync() {
-    setSyncing(true)
-    const ok = await syncToSupabase(items)
-    setSyncing(false)
-    if (ok) alert('Dados salvos no banco com sucesso!')
-    else    alert('Erro ao salvar. Tente novamente.')
-  }
 
   const filtered = useMemo(() => items.filter(i => {
     if (filterResp !== 'Todos' && i.resp !== filterResp) return false
@@ -109,15 +100,6 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, syn
                 border: '1px solid rgba(74,158,219,0.35)', cursor: 'pointer',
               }}>+ Ivan Souza</button>
             </div>
-            <div style={{ display: 'flex', gap: 8, width: '100%' }}>
-              <button onClick={handleSync} disabled={syncing} style={{
-                flex: 1, padding: '8px', borderRadius: 'var(--radius-sm)',
-                fontSize: 12, fontWeight: 600,
-                background: 'rgba(101,179,46,0.12)', color: '#65B32E',
-                border: '1px solid rgba(101,179,46,0.35)',
-                cursor: syncing ? 'not-allowed' : 'pointer', opacity: syncing ? 0.7 : 1,
-              }}>{syncing ? 'Salvando...' : '☁ Salvar no banco'}</button>
-            </div>
           </>
         ) : (
           /* Desktop: filtros normais */
@@ -153,12 +135,6 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, syn
                 background: 'rgba(74,158,219,0.12)', color: '#4A9EDB',
                 border: '1px solid rgba(74,158,219,0.35)', cursor: 'pointer',
               }}>+ Ivan Souza</button>
-              <button onClick={handleSync} disabled={syncing} style={{
-                padding: '7px 16px', borderRadius: 'var(--radius-sm)', fontSize: 12, fontWeight: 600,
-                background: 'rgba(101,179,46,0.12)', color: '#65B32E',
-                border: '1px solid rgba(101,179,46,0.35)',
-                cursor: syncing ? 'not-allowed' : 'pointer', opacity: syncing ? 0.7 : 1,
-              }}>{syncing ? 'Salvando...' : '☁ Salvar no banco'}</button>
             </div>
           </>
         )}

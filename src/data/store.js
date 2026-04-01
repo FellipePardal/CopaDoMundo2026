@@ -28,8 +28,8 @@ function fromDb(row) {
     orcado:    Number(row.orcado),
     bookado:   row.bookado,
     realizado:    Number(row.realizado) || 0,
-    realizadoUsd: Number(row.realizado_usd) || 0,
-    cotacaoReal:  Number(row.cotacao_real) || 0,
+    ...(row.realizado_usd != null ? { realizadoUsd: Number(row.realizado_usd) || 0 } : {}),
+    ...(row.cotacao_real != null ? { cotacaoReal: Number(row.cotacao_real) || 0 } : {}),
     status:       row.status || '',
     obs:          row.obs    || '',
     isNew:        row.is_new || false,
@@ -60,7 +60,7 @@ export function useStore() {
     const channel = supabase
       .channel('items-realtime')
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'items' }, (payload) => {
-        setItems(prev => prev.map(i => i.id === payload.new.id ? fromDb(payload.new) : i))
+        setItems(prev => prev.map(i => i.id === payload.new.id ? { ...i, ...fromDb(payload.new) } : i))
       })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'items' }, (payload) => {
         setItems(prev => {

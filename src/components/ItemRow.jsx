@@ -24,12 +24,13 @@ export default function ItemRow({ item, onUpdate, onRemove }) {
 
   function startEdit() {
     setDraft({
-      det:     item.det,
-      cat:     item.cat,
-      orcado:  item.orcado,
-      aliq:    item.aliq,
-      qtd:     item.qtd,
-      valorUn: item.valorUn,
+      det:          item.det,
+      cat:          item.cat,
+      fornecedores: item.fornecedores || '',
+      orcado:       item.orcado,
+      aliq:         item.aliq,
+      qtd:          item.qtd,
+      valorUn:      item.valorUn,
     })
     setEditing(true)
   }
@@ -111,6 +112,14 @@ export default function ItemRow({ item, onUpdate, onRemove }) {
           ? <input value={draft.cat} onChange={e => setDraft(d => ({ ...d, cat: e.target.value }))}
               style={{ width: 130, fontSize: 12 }} />
           : item.cat}
+      </TD>
+
+      {/* Fornecedores */}
+      <TD style={{ maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--muted)' }}>
+        {editing
+          ? <input value={draft.fornecedores || ''} onChange={e => setDraft(d => ({ ...d, fornecedores: e.target.value }))}
+              style={{ width: 160, fontSize: 12 }} />
+          : <span title={item.fornecedores}>{item.fornecedores || '—'}</span>}
       </TD>
 
       {/* Detalhamento */}

@@ -322,6 +322,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                   <TH align="center">Ações</TH>
                   <TH>Resp.</TH>
                   <TH>Categoria</TH>
+                  <TH>Fornecedores</TH>
                   <TH>Detalhamento</TH>
                   <TH align="center">Moeda</TH>
                   <TH align="center">Qtd</TH>
@@ -344,7 +345,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                 ))}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={16} style={{ padding: '40px', textAlign: 'center',
+                    <td colSpan={17} style={{ padding: '40px', textAlign: 'center',
                       color: 'var(--muted)', fontSize: 13 }}>
                       Nenhum item encontrado.
                     </td>
@@ -353,7 +354,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
               </tbody>
               <tfoot>
                 <tr style={{ background: 'var(--surface2)' }}>
-                  <td colSpan={7} style={{ padding: '11px 13px', fontSize: 12,
+                  <td colSpan={8} style={{ padding: '11px 13px', fontSize: 12,
                     fontWeight: 600, color: 'var(--muted)',
                     borderTop: '2px solid var(--border)' }}>
                     {filtered.length} {filtered.length === 1 ? 'item' : 'itens'} exibidos

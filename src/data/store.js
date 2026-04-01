@@ -15,11 +15,12 @@ export function calcItem(item) {
 
 function fromDb(row) {
   return {
-    id:        row.id,
-    resp:      row.resp,
-    cat:       row.cat,
-    catV2:     row.cat_v2,
-    det:       row.det,
+    id:           row.id,
+    resp:         row.resp,
+    cat:          row.cat,
+    catV2:        row.cat_v2,
+    fornecedores: row.fornecedores || '',
+    det:          row.det,
     moeda:     row.moeda,
     qtd:       Number(row.qtd),
     valorUn:   Number(row.valor_un),
@@ -94,7 +95,7 @@ export function useStore() {
   const addItem = useCallback(async (resp) => {
     const tempId   = Date.now()
     const tempItem = {
-      id: tempId, resp, cat: '', catV2: '', det: '',
+      id: tempId, resp, cat: '', catV2: '', fornecedores: '', det: '',
       moeda: 'Real', qtd: 1, valorUn: 0, aliq: 0, orcado: 0,
       realizado: 0, status: '', obs: '', bookado: '', isNew: true,
     }
@@ -103,7 +104,7 @@ export function useStore() {
     const { data, error } = await supabase
       .from('items')
       .insert({
-        resp, cat: '', cat_v2: '', det: '',
+        resp, cat: '', cat_v2: '', fornecedores: '', det: '',
         moeda: 'Real', qtd: 1, valor_un: 0, aliq: 0, orcado: 0,
         realizado: 0, status: '', obs: '', bookado: '', is_new: true,
       })
@@ -130,9 +131,10 @@ export function useStore() {
     const rows = currentItems.map(i => ({
       id:         i.id,
       resp:       i.resp,
-      cat:        i.cat,
-      cat_v2:     i.catV2,
-      det:        i.det,
+      cat:          i.cat,
+      cat_v2:       i.catV2,
+      fornecedores: i.fornecedores || '',
+      det:          i.det,
       moeda:      i.moeda,
       qtd:        i.qtd,
       valor_un:   i.valorUn,

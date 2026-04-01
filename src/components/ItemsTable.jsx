@@ -325,7 +325,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
           boxShadow: 'var(--shadow-sm)',
           overflow: 'hidden',
         }}>
-          <div style={{ overflowX: 'auto' }}>
+          <div style={{ overflow: 'auto', maxHeight: 'calc(100vh - 260px)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1800 }}>
               <thead>
                 <tr>

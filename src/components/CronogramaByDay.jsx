@@ -289,7 +289,9 @@ export default function CronogramaByDay({ items, updateItemMulti, addItem, remov
                         </span>}
                       </div>
                       <div style={{ fontSize: 10, color: 'var(--muted)' }}>
-                        {item.cat || '—'} · {fmt(item.valorUn)}/dia
+                        {item.cat || '—'}
+                        {item.fornecedores ? <> · <span style={{ color: 'var(--text2)' }}>{item.fornecedores}</span></> : null}
+                        {' · '}{fmt(item.valorUn)}/dia
                       </div>
                     </div>
                     <button onClick={() => removerDia(item, d.dia)}

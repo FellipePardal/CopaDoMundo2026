@@ -189,11 +189,22 @@ export default function CasaItemsTable({
                   }}>✕</button>
                 </div>
 
-                <div style={{ marginBottom: 10 }}>
-                  <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
-                    letterSpacing: '0.06em', marginBottom: 2 }}>Categoria</div>
-                  <CategoriaSelect value={item.cat} categorias={categorias}
-                    onChange={v => updateItem(item.id, 'cat', v)} onAdd={addCategoria} />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 10 }}>
+                  <div>
+                    <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
+                      letterSpacing: '0.06em', marginBottom: 2 }}>Categoria</div>
+                    <CategoriaSelect value={item.cat} categorias={categorias}
+                      onChange={v => updateItem(item.id, 'cat', v)} onAdd={addCategoria} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
+                      letterSpacing: '0.06em', marginBottom: 2 }}>Fornecedor</div>
+                    <input
+                      defaultValue={item.fornecedores || ''}
+                      onBlur={e => updateItem(item.id, 'fornecedores', e.target.value)}
+                      placeholder="—"
+                      style={{ ...inputStyle, fontFamily: 'var(--font)' }} />
+                  </div>
                 </div>
 
                 <div style={{ marginBottom: 10 }}>
@@ -308,11 +319,12 @@ export default function CasaItemsTable({
           overflow: 'hidden',
         }}>
           <div style={{ overflow: 'auto', maxHeight: 'calc(100vh - 260px)' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1200 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1300 }}>
               <thead>
                 <tr>
                   <TH align="center">Ações</TH>
                   <TH>Categoria</TH>
+                  <TH>Fornecedor</TH>
                   <TH>Detalhamento</TH>
                   <TH align="right">Diárias</TH>
                   <TH align="right">Valor/Dia (R$)</TH>
@@ -341,7 +353,14 @@ export default function CasaItemsTable({
                         <CategoriaSelect value={item.cat} categorias={categorias}
                           onChange={v => updateItem(item.id, 'cat', v)} onAdd={addCategoria} />
                       </TD>
-                      <TD style={{ minWidth: 260 }}>
+                      <TD style={{ minWidth: 140 }}>
+                        <input
+                          defaultValue={item.fornecedores || ''}
+                          onBlur={e => updateItem(item.id, 'fornecedores', e.target.value)}
+                          placeholder="Fornecedor"
+                          style={{ ...inputStyle, fontFamily: 'var(--font)' }} />
+                      </TD>
+                      <TD style={{ minWidth: 240 }}>
                         <input
                           defaultValue={item.det || ''}
                           onBlur={e => updateItem(item.id, 'det', e.target.value)}
@@ -396,7 +415,7 @@ export default function CasaItemsTable({
                 })}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={10} style={{ padding: '40px', textAlign: 'center',
+                    <td colSpan={11} style={{ padding: '40px', textAlign: 'center',
                       color: 'var(--muted)', fontSize: 13 }}>
                       Nenhum item. Clique em <strong>+ Novo item</strong>.
                     </td>
@@ -405,7 +424,7 @@ export default function CasaItemsTable({
               </tbody>
               <tfoot>
                 <tr style={{ background: 'var(--surface2)' }}>
-                  <td colSpan={5} style={{ padding: '11px 13px', fontSize: 12,
+                  <td colSpan={6} style={{ padding: '11px 13px', fontSize: 12,
                     fontWeight: 600, color: 'var(--muted)',
                     borderTop: '2px solid var(--border)' }}>
                     {filtered.length} {filtered.length === 1 ? 'item' : 'itens'}

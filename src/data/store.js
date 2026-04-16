@@ -193,8 +193,11 @@ export function useStore(projeto = 'transmissao_copa') {
       ? Math.round(totals[resp].realizado / totals[resp].orcado * 1000) / 10 : 0
   }
 
+  const orcamentoTarget = Object.values(orcamentoAtivo).reduce((s, v) => s + v, 0)
+  const orcamentoItens  = computed.reduce((s, i) => s + (i.orcado || 0), 0)
+
   const grand = {
-    orcado:    Object.values(orcamentoAtivo).reduce((s, v) => s + v, 0),
+    orcado:    orcamentoTarget > 0 ? orcamentoTarget : orcamentoItens,
     realizado: computed.reduce((s, i) => s + (i.realizado || 0), 0),
     imposto:   computed.reduce((s, i) => s + i.imposto, 0),
     semImp:    computed.reduce((s, i) => s + i.semImp, 0),
@@ -222,4 +225,49 @@ export function useStore(projeto = 'transmissao_copa') {
   }, {})
 
   return { items: computed, loading, updateItem, addItem, removeItem, syncToSupabase, totals, grand, byCategory, byStatus }
+}
+
+export function useCategorias(projeto) {
+  const [categorias, setCategorias] = useState([])
+
+  useEffect(() => {
+    if (!projeto) return
+    let alive = true
+
+    const load = () => supabase
+      .from('categorias')
+      .select('*')
+      .eq('projeto', projeto)
+      .order('nome')
+      .then(({ data, error }) => {
+        if (!alive) return
+        if (error) console.error('Erro ao carregar categorias:', error)
+        else setCategorias(data || [])
+      })
+
+    load()
+
+    const channel = supabase
+      .channel(`categorias-${projeto}`)
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'categorias', filter: `projeto=eq.${projeto}` },
+        () => load())
+      .subscribe()
+
+    return () => { alive = false; supabase.removeChannel(channel) }
+  }, [projeto])
+
+  const addCategoria = useCallback(async (nome) => {
+    const clean = (nome || '').trim()
+    if (!clean) return
+    const { error } = await supabase.from('categorias').insert({ projeto, nome: clean })
+    if (error && error.code !== '23505') console.error('Erro ao adicionar categoria:', error)
+  }, [projeto])
+
+  const removeCategoria = useCallback(async (id) => {
+    const { error } = await supabase.from('categorias').delete().eq('id', id)
+    if (error) console.error('Erro ao remover categoria:', error)
+  }, [])
+
+  return { categorias, addCategoria, removeCategoria }
 }

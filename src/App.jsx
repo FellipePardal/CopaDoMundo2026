@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { useStore } from './data/store.js'
+import { useStore, useCategorias } from './data/store.js'
 import { PROJETOS } from './data/items.js'
 import { fmt, fmtM, fmtPct, CAT_COLORS } from './data/utils.js'
 import KpiCard from './components/KpiCard.jsx'
 import ProgressBar from './components/ProgressBar.jsx'
 import ItemsTable from './components/ItemsTable.jsx'
+import CasaItemsTable from './components/CasaItemsTable.jsx'
 import { OrcadoVsRealizadoChart, CategoriaChart, ImpostoChart } from './components/Charts.jsx'
 
 const Card = ({ children, style = {} }) => (
@@ -71,17 +72,28 @@ export default function App() {
   const isCasa       = projetoAtual.grupo === 'casa'
   const casaSubs     = PROJETOS.filter(p => p.grupo === 'casa')
 
+  const { categorias, addCategoria } = useCategorias(isCasa ? activeProjeto : null)
+
+  useEffect(() => {
+    if (isCasa && activeTab === 'impostos') setActiveTab('overview')
+  }, [isCasa, activeTab])
+
   function toggleTheme() {
     const next = theme === 'light' ? 'dark' : 'light'
     setTheme(next)
     document.documentElement.setAttribute('data-theme', next)
   }
 
-  const tabs = [
-    { id: 'overview', label: 'Visão Geral' },
-    { id: 'detail',   label: 'Itens' },
-    { id: 'impostos', label: 'Impostos' },
-  ]
+  const tabs = isCasa
+    ? [
+        { id: 'overview', label: 'Visão Geral' },
+        { id: 'detail',   label: 'Itens' },
+      ]
+    : [
+        { id: 'overview', label: 'Visão Geral' },
+        { id: 'detail',   label: 'Itens' },
+        { id: 'impostos', label: 'Impostos' },
+      ]
 
   const isDark = theme === 'dark'
 
@@ -272,47 +284,59 @@ export default function App() {
             {/* KPIs */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, minmax(0,1fr))',
+              gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : `repeat(${isCasa ? 4 : 5}, minmax(0,1fr))`,
               gap: isMobile ? 10 : 14,
               marginBottom: isMobile ? 14 : 22,
             }}>
               <KpiCard label="Orçado Total"     value={fmtM(grand.orcado)}
                 sub={`${items.length} itens`} accent="#585455" />
-              <KpiCard label="João Crispim"     value={fmtM(totals['João Crispim']?.orcado)}
-                sub={`Real: ${fmtM(totals['João Crispim']?.realizado)}`} accent="#65B32E" />
-              <KpiCard label="Ivan Souza"       value={fmtM(totals['Ivan Souza']?.orcado)}
-                sub={`Real: ${fmtM(totals['Ivan Souza']?.realizado)}`} accent="#4A9EDB" />
+              {!isCasa && (
+                <>
+                  <KpiCard label="João Crispim"     value={fmtM(totals['João Crispim']?.orcado)}
+                    sub={`Real: ${fmtM(totals['João Crispim']?.realizado)}`} accent="#65B32E" />
+                  <KpiCard label="Ivan Souza"       value={fmtM(totals['Ivan Souza']?.orcado)}
+                    sub={`Real: ${fmtM(totals['Ivan Souza']?.realizado)}`} accent="#4A9EDB" />
+                </>
+              )}
               <KpiCard label="Total Realizado"  value={fmtM(grand.realizado)}
                 sub={`${fmtPct(grand.pctExec)} exec.`} accent="#65B32E" />
               <KpiCard label="Saldo"            value={fmtM(grand.saldo)}
                 sub={`${fmtPct(100 - grand.pctExec)} restante`}
                 accent={grand.saldo < 0 ? '#E05252' : '#F5A623'} />
+              {isCasa && (
+                <KpiCard label="Categorias" value={Object.keys(byCategory).length}
+                  sub="cadastradas" accent="#4A9EDB" />
+              )}
             </div>
 
             {/* Progresso */}
-            <Card style={{ marginBottom: isMobile ? 14 : 20, padding: isMobile ? '16px' : '22px 24px' }}>
-              <CardTitle>Progresso de Execução</CardTitle>
-              {Object.entries(totals).map(([resp, t]) => (
-                <ProgressBar key={resp} label={resp === 'João Crispim' ? 'Operações' : 'Engenharia'}
-                  pct={t.pctExec} realizado={t.realizado} orcado={t.orcado}
-                  color={resp === 'João Crispim' ? '#65B32E' : '#4A9EDB'}
-                  initials={resp === 'João Crispim' ? 'OP' : 'ENG'}
-                />
-              ))}
-            </Card>
+            {!isCasa && Object.keys(totals).length > 0 && (
+              <Card style={{ marginBottom: isMobile ? 14 : 20, padding: isMobile ? '16px' : '22px 24px' }}>
+                <CardTitle>Progresso de Execução</CardTitle>
+                {Object.entries(totals).map(([resp, t]) => (
+                  <ProgressBar key={resp} label={resp === 'João Crispim' ? 'Operações' : 'Engenharia'}
+                    pct={t.pctExec} realizado={t.realizado} orcado={t.orcado}
+                    color={resp === 'João Crispim' ? '#65B32E' : '#4A9EDB'}
+                    initials={resp === 'João Crispim' ? 'OP' : 'ENG'}
+                  />
+                ))}
+              </Card>
+            )}
 
             {/* Gráficos */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+              gridTemplateColumns: isMobile ? '1fr' : (isCasa ? '1fr' : '1fr 1fr'),
               gap: isMobile ? 12 : 16,
               marginBottom: isMobile ? 14 : 20,
             }}>
-              <Card style={{ padding: isMobile ? '16px' : '22px 24px' }}>
-                <CardTitle>Orçado vs Realizado</CardTitle>
-                <Legend items={[['Orçado','#65B32E'],['Realizado','#4A9EDB'],['Saldo','#CBD5E1']]} />
-                <OrcadoVsRealizadoChart totals={totals} />
-              </Card>
+              {!isCasa && (
+                <Card style={{ padding: isMobile ? '16px' : '22px 24px' }}>
+                  <CardTitle>Orçado vs Realizado</CardTitle>
+                  <Legend items={[['Orçado','#65B32E'],['Realizado','#4A9EDB'],['Saldo','#CBD5E1']]} />
+                  <OrcadoVsRealizadoChart totals={totals} />
+                </Card>
+              )}
               <Card style={{ padding: isMobile ? '16px' : '22px 24px' }}>
                 <CardTitle>Distribuição por Categoria</CardTitle>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
@@ -470,14 +494,23 @@ export default function App() {
           <>
             <div style={{ marginBottom: 16 }}>
               <h2 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
-                Detalhe dos Itens Orçados
+                {isCasa ? `Itens — ${projetoAtual.label}` : 'Detalhe dos Itens Orçados'}
               </h2>
               <p style={{ fontSize: 13, color: 'var(--muted)' }}>
-                Preencha <strong style={{ color: '#65B32E' }}>Realizado (R$)</strong> e selecione o <strong style={{ color: '#65B32E' }}>Status</strong>.
+                {isCasa
+                  ? <>Adicione itens com <strong style={{ color: '#4A9EDB' }}>categoria</strong>, <strong style={{ color: '#4A9EDB' }}>diárias</strong> e <strong style={{ color: '#4A9EDB' }}>valor/dia</strong>.</>
+                  : <>Preencha <strong style={{ color: '#65B32E' }}>Realizado (R$)</strong> e selecione o <strong style={{ color: '#65B32E' }}>Status</strong>.</>
+                }
               </p>
             </div>
-            <ItemsTable items={items} updateItem={updateItem} addItem={addItem}
-              removeItem={removeItem} isMobile={isMobile} />
+            {isCasa ? (
+              <CasaItemsTable items={items} updateItem={updateItem} addItem={addItem}
+                removeItem={removeItem} categorias={categorias} addCategoria={addCategoria}
+                isMobile={isMobile} />
+            ) : (
+              <ItemsTable items={items} updateItem={updateItem} addItem={addItem}
+                removeItem={removeItem} isMobile={isMobile} />
+            )}
           </>
         )}
 

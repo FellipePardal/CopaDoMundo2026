@@ -6,6 +6,7 @@ import KpiCard from './components/KpiCard.jsx'
 import ProgressBar from './components/ProgressBar.jsx'
 import ItemsTable from './components/ItemsTable.jsx'
 import CasaItemsTable from './components/CasaItemsTable.jsx'
+import CronogramaGantt from './components/CronogramaGantt.jsx'
 import { OrcadoVsRealizadoChart, CategoriaChart, ImpostoChart } from './components/Charts.jsx'
 
 const Card = ({ children, style = {} }) => (
@@ -62,7 +63,7 @@ function useIsMobile() {
 
 export default function App() {
   const [activeProjeto, setActiveProjeto] = useState('transmissao_copa')
-  const { items, updateItem, addItem, removeItem, totals, grand, byCategory, byStatus } = useStore(activeProjeto)
+  const { items, updateItem, updateItemMulti, addItem, removeItem, totals, grand, byCategory, byStatus } = useStore(activeProjeto)
   const [activeTab, setActiveTab] = useState('overview')
   const [theme, setTheme] = useState('light')
   const [mobileMenu, setMobileMenu] = useState(false)
@@ -75,8 +76,8 @@ export default function App() {
   const { categorias, addCategoria } = useCategorias(isCasa ? activeProjeto : null)
 
   useEffect(() => {
-    if (isCasa && activeTab === 'impostos') setActiveTab('overview')
-  }, [isCasa, activeTab])
+    if (!tabs.find(t => t.id === activeTab)) setActiveTab('overview')
+  }, [activeProjeto]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function toggleTheme() {
     const next = theme === 'light' ? 'dark' : 'light'
@@ -84,16 +85,22 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', next)
   }
 
-  const tabs = isCasa
+  const tabs = activeProjeto === 'casa_rio'
     ? [
-        { id: 'overview', label: 'Visão Geral' },
-        { id: 'detail',   label: 'Itens' },
+        { id: 'overview',    label: 'Visão Geral' },
+        { id: 'cronograma',  label: 'Cronograma' },
+        { id: 'detail',      label: 'Itens' },
       ]
-    : [
-        { id: 'overview', label: 'Visão Geral' },
-        { id: 'detail',   label: 'Itens' },
-        { id: 'impostos', label: 'Impostos' },
-      ]
+    : isCasa
+      ? [
+          { id: 'overview', label: 'Visão Geral' },
+          { id: 'detail',   label: 'Itens' },
+        ]
+      : [
+          { id: 'overview', label: 'Visão Geral' },
+          { id: 'detail',   label: 'Itens' },
+          { id: 'impostos', label: 'Impostos' },
+        ]
 
   const isDark = theme === 'dark'
 
@@ -486,6 +493,22 @@ export default function App() {
                 </div>
               )}
             </Card>
+          </>
+        )}
+
+        {/* CRONOGRAMA — somente Casa Rio */}
+        {activeTab === 'cronograma' && activeProjeto === 'casa_rio' && (
+          <>
+            <div style={{ marginBottom: 16 }}>
+              <h2 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
+                Cronograma — Casa Rio de Janeiro
+              </h2>
+              <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+                13 dias · de <strong>29/mai</strong> a <strong>10/jun</strong>. Clique nas células para marcar em quais dias cada item está ativo — as <strong style={{ color: '#4A9EDB' }}>Diárias</strong> e o <strong style={{ color: '#4A9EDB' }}>Orçado</strong> são calculados automaticamente.
+              </p>
+            </div>
+            <CronogramaGantt items={items} updateItemMulti={updateItemMulti}
+              addItem={addItem} removeItem={removeItem} isMobile={isMobile} />
           </>
         )}
 

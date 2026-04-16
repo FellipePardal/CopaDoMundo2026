@@ -21,6 +21,32 @@ export const PROJETOS = [
   { id: 'casa_sp',          label: 'Casa São Paulo',      grupo: 'casa'    },
 ]
 
+// Fases e suas cores — usadas no cronograma do Rio
+export const FASES = {
+  'Montagem':      { color: '#6B7A96' },
+  'Teste Técnico': { color: '#4A9EDB' },
+  'Fake Vivo':     { color: '#F59E0B' },
+  'Ajustes':       { color: '#8B5CF6' },
+  'Ao Vivo':       { color: '#E05252' },
+}
+
+// Cronograma Casa CazéTV Rio — 13 dias. Exclusivo Rio, não replicar para SP.
+export const CRONOGRAMA_RIO = [
+  { dia: 1,  data: '29 mai', diaSemana: 'Qui', fase: 'Montagem',      desc: 'Início da montagem' },
+  { dia: 2,  data: '30 mai', diaSemana: 'Sex', fase: 'Montagem',      desc: 'Montagem' },
+  { dia: 3,  data: '31 mai', diaSemana: 'Dom', fase: 'Montagem',      desc: 'Montagem' },
+  { dia: 4,  data: '01 jun', diaSemana: 'Dom', fase: 'Teste Técnico', desc: 'Teste técnico — vídeo, áudio, interação, iluminação e sistemas' },
+  { dia: 5,  data: '02 jun', diaSemana: 'Seg', fase: 'Teste Técnico', desc: 'Teste técnico — vídeo, áudio, interação, iluminação e sistemas' },
+  { dia: 6,  data: '03 jun', diaSemana: 'Ter', fase: 'Fake Vivo',     desc: 'Jogo Teste 1 — Fake Vivo + reunião de feedbacks' },
+  { dia: 7,  data: '04 jun', diaSemana: 'Qua', fase: 'Ajustes',       desc: 'Ajustes de montagem e calibração' },
+  { dia: 8,  data: '05 jun', diaSemana: 'Qui', fase: 'Fake Vivo',     desc: 'Jogo Teste 2 — Fake Vivo + reunião de feedbacks' },
+  { dia: 9,  data: '06 jun', diaSemana: 'Sex', fase: 'Ajustes',       desc: 'Ajustes de montagem e calibração' },
+  { dia: 10, data: '07 jun', diaSemana: 'Dom', fase: 'Fake Vivo',     desc: 'Jogo Teste 3 — Fake Vivo + reunião de feedbacks' },
+  { dia: 11, data: '08 jun', diaSemana: 'Dom', fase: 'Ajustes',       desc: 'Ajustes de montagem e calibração' },
+  { dia: 12, data: '09 jun', diaSemana: 'Seg', fase: 'Ao Vivo',       desc: 'Jogo Teste 4 — AO VIVO' },
+  { dia: 13, data: '10 jun', diaSemana: 'Ter', fase: 'Ajustes',       desc: 'Ajustes de montagem e calibração' },
+]
+
 export const COTACAO = 5.6
 
 export const INITIAL_ITEMS = [

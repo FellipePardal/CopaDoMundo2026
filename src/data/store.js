@@ -34,6 +34,7 @@ function fromDb(row) {
     status:       row.status || '',
     obs:          row.obs    || '',
     isNew:        row.is_new || false,
+    dias:         Array.isArray(row.dias) ? row.dias : [],
   }
 }
 
@@ -98,6 +99,17 @@ export function useStore(projeto = 'transmissao_copa') {
         .eq('id', id)
       if (error) console.error('Erro ao salvar:', error)
     }, delay)
+  }, [])
+
+  const updateItemMulti = useCallback(async (id, fields) => {
+    setItems(prev => prev.map(item =>
+      item.id === id ? { ...item, ...fields } : item
+    ))
+    const dbFields = Object.fromEntries(
+      Object.entries(fields).map(([k, v]) => [toDbField(k), v])
+    )
+    const { error } = await supabase.from('items').update(dbFields).eq('id', id)
+    if (error) console.error('Erro ao salvar múltiplos campos:', error)
   }, [])
 
   const addItem = useCallback(async (resp) => {
@@ -224,7 +236,7 @@ export function useStore(projeto = 'transmissao_copa') {
     return acc
   }, {})
 
-  return { items: computed, loading, updateItem, addItem, removeItem, syncToSupabase, totals, grand, byCategory, byStatus }
+  return { items: computed, loading, updateItem, updateItemMulti, addItem, removeItem, syncToSupabase, totals, grand, byCategory, byStatus }
 }
 
 export function useCategorias(projeto) {

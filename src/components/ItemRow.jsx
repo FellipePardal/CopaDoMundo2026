@@ -15,11 +15,164 @@ const TD = ({ children, align = 'left', mono = false, style = {} }) => (
   </td>
 )
 
+function ComposicaoPanel({ item, onUpdate }) {
+  const composicao = Array.isArray(item.composicao) ? item.composicao : []
+
+  function persist(novo) {
+    onUpdate(item.id, 'composicao', novo)
+  }
+
+  function updateComp(idx, field, raw) {
+    const value = field === 'desc' ? raw : (parseFloat((raw + '').replace(',', '.')) || 0)
+    const novo = composicao.map((c, i) => i === idx ? { ...c, [field]: value } : c)
+    persist(novo)
+  }
+
+  function addComp() {
+    persist([...composicao, { desc: '', qtd: 1, valor: 0 }])
+  }
+
+  function removeComp(idx) {
+    persist(composicao.filter((_, i) => i !== idx))
+  }
+
+  const soma    = composicao.reduce((s, c) => s + (Number(c.qtd) || 0) * (Number(c.valor) || 0), 0)
+  const diff    = Math.round((soma - item.orcado) * 100) / 100
+  const bate    = Math.abs(diff) < 0.01
+
+  const thStyle = {
+    padding: '6px 10px', fontSize: 10, fontWeight: 600,
+    textTransform: 'uppercase', letterSpacing: '0.08em',
+    color: 'var(--muted)', textAlign: 'left',
+    borderBottom: '1px solid var(--border)',
+  }
+  const tdStyle = {
+    padding: '4px 8px', fontSize: 12, color: 'var(--text2)',
+    borderBottom: '1px solid var(--border)',
+  }
+  const inputStyle = {
+    width: '100%', fontSize: 12, padding: '4px 7px',
+    background: 'var(--surface)', border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-sm)', color: 'var(--text)',
+    fontFamily: 'var(--mono)',
+  }
+
+  return (
+    <div style={{ padding: '14px 22px 18px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between',
+        alignItems: 'baseline', marginBottom: 10 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
+          letterSpacing: '0.08em', color: 'var(--muted)' }}>
+          Composição — {item.det}
+        </div>
+        <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+          {composicao.length} {composicao.length === 1 ? 'componente' : 'componentes'}
+        </div>
+      </div>
+
+      <table style={{ width: '100%', borderCollapse: 'collapse',
+        background: 'var(--surface)', borderRadius: 'var(--radius-md)',
+        border: '1px solid var(--border)' }}>
+        <thead>
+          <tr>
+            <th style={thStyle}>Descrição</th>
+            <th style={{ ...thStyle, textAlign: 'right', width: 90 }}>Qtd</th>
+            <th style={{ ...thStyle, textAlign: 'right', width: 150 }}>Valor Un (R$)</th>
+            <th style={{ ...thStyle, textAlign: 'right', width: 150 }}>Total (R$)</th>
+            <th style={{ ...thStyle, textAlign: 'center', width: 40 }}></th>
+          </tr>
+        </thead>
+        <tbody>
+          {composicao.map((c, idx) => {
+            const total = (Number(c.qtd) || 0) * (Number(c.valor) || 0)
+            return (
+              <tr key={idx}>
+                <td style={{ ...tdStyle, minWidth: 200 }}>
+                  <input
+                    defaultValue={c.desc || ''}
+                    onBlur={e => updateComp(idx, 'desc', e.target.value)}
+                    placeholder="Ex: 10 câmeras 4K"
+                    style={{ ...inputStyle, fontFamily: 'var(--font)' }} />
+                </td>
+                <td style={tdStyle}>
+                  <input type="number" step="0.01"
+                    defaultValue={c.qtd || ''}
+                    onBlur={e => updateComp(idx, 'qtd', e.target.value)}
+                    style={{ ...inputStyle, textAlign: 'right' }} />
+                </td>
+                <td style={tdStyle}>
+                  <input type="number" step="0.01"
+                    defaultValue={c.valor || ''}
+                    onBlur={e => updateComp(idx, 'valor', e.target.value)}
+                    style={{ ...inputStyle, textAlign: 'right' }} />
+                </td>
+                <td style={{ ...tdStyle, textAlign: 'right',
+                  fontFamily: 'var(--mono)', fontWeight: 600, color: 'var(--text)' }}>
+                  {fmt(total)}
+                </td>
+                <td style={{ ...tdStyle, textAlign: 'center' }}>
+                  <button onClick={() => removeComp(idx)} title="Remover" style={{
+                    border: 'none', background: 'transparent', color: '#E05252',
+                    fontSize: 14, cursor: 'pointer', padding: 2,
+                  }}>✕</button>
+                </td>
+              </tr>
+            )
+          })}
+          {composicao.length === 0 && (
+            <tr>
+              <td colSpan={5} style={{ ...tdStyle, textAlign: 'center',
+                color: 'var(--muted2)', fontStyle: 'italic', padding: '14px 10px' }}>
+                Sem componentes ainda. Clique em + Adicionar.
+              </td>
+            </tr>
+          )}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={3} style={{ ...tdStyle, borderBottom: 'none', padding: '8px 10px' }}>
+              <button onClick={addComp} style={{
+                padding: '5px 12px', fontSize: 11.5, fontWeight: 600,
+                background: 'rgba(101,179,46,0.12)', color: '#65B32E',
+                border: '1px solid rgba(101,179,46,0.35)',
+                borderRadius: 'var(--radius-sm)', cursor: 'pointer',
+              }}>+ Adicionar componente</button>
+            </td>
+            <td style={{ ...tdStyle, textAlign: 'right', borderBottom: 'none',
+              fontFamily: 'var(--mono)', fontWeight: 700,
+              color: 'var(--text)', padding: '8px 10px' }}>
+              {fmt(soma)}
+            </td>
+            <td style={{ borderBottom: 'none' }} />
+          </tr>
+          <tr>
+            <td colSpan={3} style={{ ...tdStyle, borderBottom: 'none', padding: '2px 10px 10px',
+              fontSize: 11, color: 'var(--muted)' }}>
+              Soma deve bater com o orçado do item.
+            </td>
+            <td style={{ ...tdStyle, textAlign: 'right', borderBottom: 'none',
+              padding: '2px 10px 10px', fontSize: 11, fontFamily: 'var(--mono)',
+              color: bate ? '#65B32E' : '#E05252', fontWeight: 600 }}>
+              {bate
+                ? `✓ bate com ${fmt(item.orcado)}`
+                : `Δ ${diff > 0 ? '+' : ''}${fmt(diff)} vs ${fmt(item.orcado)}`}
+            </td>
+            <td style={{ borderBottom: 'none' }} />
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  )
+}
+
 export default function ItemRow({ item, onUpdate, onRemove, categories = [], showTaxCols = false }) {
   const [editing, setEditing] = useState(false)
+  const [expanded, setExpanded] = useState(false)
   const [draft, setDraft] = useState({})
   const [addingCat, setAddingCat] = useState(false)
   const [newCat, setNewCat] = useState('')
+
+  const compCount = Array.isArray(item.composicao) ? item.composicao.length : 0
 
   const diff = item.realizado > 0 ? Math.round(item.realizado - item.orcado) : null
   const diffColor = diff === null ? 'var(--muted2)'
@@ -67,6 +220,7 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
   const rowBg = editing ? 'rgba(101,179,46,0.04)' : 'transparent'
 
   return (
+    <React.Fragment>
     <tr
       style={{ transition: 'background 0.12s', background: rowBg }}
       onMouseEnter={e => { if (!editing) e.currentTarget.style.background = 'var(--surface2)' }}
@@ -75,33 +229,49 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
 
       {/* AÇÕES — primeira coluna, sempre visível */}
       <TD>
-        {item.isNew ? (
-          <button onClick={() => onRemove(item.id)} style={{
-            background: 'rgba(224,82,82,0.10)', color: '#E05252',
-            border: '1px solid rgba(224,82,82,0.30)',
-            borderRadius: 6, padding: '4px 10px', fontSize: 12, cursor: 'pointer',
-          }}>Remover</button>
-        ) : editing ? (
-          <div style={{ display: 'flex', gap: 6 }}>
-            <button onClick={saveEdit} style={{
-              padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600,
-              background: 'rgba(101,179,46,0.15)', color: '#65B32E',
-              border: '1px solid rgba(101,179,46,0.35)', cursor: 'pointer',
-            }}>Salvar</button>
-            <button onClick={cancelEdit} style={{
-              padding: '4px 10px', borderRadius: 6, fontSize: 12,
+        <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+          {!item.isNew && (
+            <button
+              onClick={() => setExpanded(e => !e)}
+              title={compCount > 0 ? `${compCount} componente(s) cadastrado(s)` : 'Detalhar composição'}
+              style={{
+                padding: '4px 7px', borderRadius: 4, fontSize: 10, fontWeight: 700,
+                background: compCount > 0 ? 'rgba(74,158,219,0.12)' : 'var(--surface2)',
+                color: compCount > 0 ? '#4A9EDB' : 'var(--muted)',
+                border: `1px solid ${compCount > 0 ? 'rgba(74,158,219,0.30)' : 'var(--border)'}`,
+                cursor: 'pointer', minWidth: 28, fontFamily: 'var(--mono)',
+              }}>
+              {expanded ? '▼' : '▶'}{compCount > 0 && ` ${compCount}`}
+            </button>
+          )}
+          {item.isNew ? (
+            <button onClick={() => onRemove(item.id)} style={{
+              background: 'rgba(224,82,82,0.10)', color: '#E05252',
+              border: '1px solid rgba(224,82,82,0.30)',
+              borderRadius: 6, padding: '4px 10px', fontSize: 12, cursor: 'pointer',
+            }}>Remover</button>
+          ) : editing ? (
+            <>
+              <button onClick={saveEdit} style={{
+                padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600,
+                background: 'rgba(101,179,46,0.15)', color: '#65B32E',
+                border: '1px solid rgba(101,179,46,0.35)', cursor: 'pointer',
+              }}>Salvar</button>
+              <button onClick={cancelEdit} style={{
+                padding: '4px 10px', borderRadius: 6, fontSize: 12,
+                background: 'var(--surface2)', color: 'var(--muted)',
+                border: '1px solid var(--border)', cursor: 'pointer',
+              }}>✕</button>
+            </>
+          ) : (
+            <button onClick={startEdit} style={{
+              padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 500,
               background: 'var(--surface2)', color: 'var(--muted)',
               border: '1px solid var(--border)', cursor: 'pointer',
-            }}>✕</button>
-          </div>
-        ) : (
-          <button onClick={startEdit} style={{
-            padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 500,
-            background: 'var(--surface2)', color: 'var(--muted)',
-            border: '1px solid var(--border)', cursor: 'pointer',
-            whiteSpace: 'nowrap',
-          }}>✏️ Editar</button>
-        )}
+              whiteSpace: 'nowrap',
+            }}>✏️ Editar</button>
+          )}
+        </div>
       </TD>
 
       {/* Responsável */}
@@ -396,5 +566,18 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
       </TD>
 
     </tr>
+
+    {expanded && !item.isNew && (
+      <tr>
+        <td colSpan={showTaxCols ? 20 : 18} style={{
+          padding: 0, background: 'var(--surface2)',
+          borderBottom: '2px solid var(--border)',
+          borderLeft: '3px solid #4A9EDB',
+        }}>
+          <ComposicaoPanel item={item} onUpdate={onUpdate} />
+        </td>
+      </tr>
+    )}
+    </React.Fragment>
   )
 }

@@ -35,6 +35,7 @@ function fromDb(row) {
     obs:          row.obs    || '',
     isNew:        row.is_new || false,
     dias:         Array.isArray(row.dias) ? row.dias : [],
+    composicao:   Array.isArray(row.composicao) ? row.composicao : [],
   }
 }
 

@@ -7,9 +7,19 @@
 // Orçado total: João Crispim R$ 8.398.589,19 | Ivan Souza R$ 52.300,00
 
 export const ORCAMENTO = {
-  'João Crispim': 8398589.19,
-  'Ivan Souza':   52300.00,
+  transmissao_copa: {
+    'João Crispim': 8398589.19,
+    'Ivan Souza':   52300.00,
+  },
+  casa_rio: {},
+  casa_sp:  {},
 }
+
+export const PROJETOS = [
+  { id: 'transmissao_copa', label: 'Transmissão Copa', grupo: null         },
+  { id: 'casa_rio',         label: 'Casa Rio de Janeiro', grupo: 'casa'    },
+  { id: 'casa_sp',          label: 'Casa São Paulo',      grupo: 'casa'    },
+]
 
 export const COTACAO = 5.6
 

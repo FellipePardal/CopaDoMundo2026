@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useStore } from './data/store.js'
+import { PROJETOS } from './data/items.js'
 import { fmt, fmtM, fmtPct, CAT_COLORS } from './data/utils.js'
 import KpiCard from './components/KpiCard.jsx'
 import ProgressBar from './components/ProgressBar.jsx'
@@ -59,11 +60,16 @@ function useIsMobile() {
 }
 
 export default function App() {
-  const { items, updateItem, addItem, removeItem, totals, grand, byCategory, byStatus } = useStore()
+  const [activeProjeto, setActiveProjeto] = useState('transmissao_copa')
+  const { items, updateItem, addItem, removeItem, totals, grand, byCategory, byStatus } = useStore(activeProjeto)
   const [activeTab, setActiveTab] = useState('overview')
   const [theme, setTheme] = useState('light')
   const [mobileMenu, setMobileMenu] = useState(false)
   const isMobile = useIsMobile()
+
+  const projetoAtual = PROJETOS.find(p => p.id === activeProjeto) || PROJETOS[0]
+  const isCasa       = projetoAtual.grupo === 'casa'
+  const casaSubs     = PROJETOS.filter(p => p.grupo === 'casa')
 
   function toggleTheme() {
     const next = theme === 'light' ? 'dark' : 'light'
@@ -196,6 +202,61 @@ export default function App() {
             ))}
           </div>
         )}
+      </div>
+
+      {/* PROJETO NAV */}
+      <div style={{
+        background: isDark ? 'rgba(0,0,0,0.20)' : 'var(--surface2)',
+        borderBottom: '1px solid var(--border)',
+      }}>
+        <div style={{
+          maxWidth: 1600, margin: '0 auto',
+          padding: isMobile ? '8px 12px' : '10px 32px',
+          display: 'flex', alignItems: 'center', gap: isMobile ? 8 : 14,
+          flexWrap: 'wrap',
+        }}>
+          <span style={{
+            fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
+            letterSpacing: '0.1em', color: 'var(--muted)',
+          }}>Projeto</span>
+
+          <div style={{ display: 'flex', gap: 4 }}>
+            {[
+              { id: 'transmissao_copa', label: 'Transmissão Copa', active: !isCasa },
+              { id: 'casa_rio',         label: 'Casa CazéTV',      active: isCasa  },
+            ].map(p => (
+              <button key={p.id} onClick={() => setActiveProjeto(p.id)} style={{
+                padding: isMobile ? '6px 12px' : '6px 16px',
+                borderRadius: 8, fontSize: 12.5, fontWeight: 600,
+                border: `1px solid ${p.active ? 'rgba(101,179,46,0.40)' : 'var(--border)'}`,
+                background: p.active ? 'rgba(101,179,46,0.15)' : 'var(--surface)',
+                color: p.active ? '#65B32E' : 'var(--muted)',
+                cursor: 'pointer',
+              }}>{p.label}</button>
+            ))}
+          </div>
+
+          {isCasa && (
+            <>
+              <span style={{ color: 'var(--muted2)', fontSize: 14 }}>›</span>
+              <div style={{ display: 'flex', gap: 4 }}>
+                {casaSubs.map(p => {
+                  const active = activeProjeto === p.id
+                  return (
+                    <button key={p.id} onClick={() => setActiveProjeto(p.id)} style={{
+                      padding: isMobile ? '5px 10px' : '5px 14px',
+                      borderRadius: 6, fontSize: 12, fontWeight: 500,
+                      border: `1px solid ${active ? '#4A9EDB' : 'var(--border)'}`,
+                      background: active ? 'rgba(74,158,219,0.12)' : 'transparent',
+                      color: active ? '#4A9EDB' : 'var(--muted)',
+                      cursor: 'pointer',
+                    }}>{p.label.replace('Casa ', '')}</button>
+                  )
+                })}
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       {/* CONTENT */}

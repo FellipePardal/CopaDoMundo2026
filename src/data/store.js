@@ -16,6 +16,7 @@ export function calcItem(item) {
 function fromDb(row) {
   return {
     id:           row.id,
+    projeto:      row.projeto || 'transmissao_copa',
     resp:         row.resp,
     cat:          row.cat,
     catV2:        row.cat_v2,
@@ -39,16 +40,20 @@ function fromDb(row) {
 const FIELD_MAP = { catV2: 'cat_v2', valorUn: 'valor_un', isNew: 'is_new', realizadoUsd: 'realizado_usd', cotacaoReal: 'cotacao_real' }
 const toDbField = (f) => FIELD_MAP[f] || f
 
-export function useStore() {
+export function useStore(projeto = 'transmissao_copa') {
   const [items,   setItems]   = useState([])
   const [loading, setLoading] = useState(true)
   const saveTimer = useRef({})
 
   useEffect(() => {
-    // Carga inicial
+    setLoading(true)
+    setItems([])
+
+    // Carga inicial — filtrada pelo projeto ativo
     supabase
       .from('items')
       .select('*')
+      .eq('projeto', projeto)
       .order('id')
       .then(({ data, error }) => {
         if (error) console.error('Erro ao carregar:', error)
@@ -56,25 +61,26 @@ export function useStore() {
         setLoading(false)
       })
 
-    // Tempo real — atualiza automaticamente quando qualquer usuário muda algo
+    // Tempo real — apenas eventos do projeto ativo
+    const filter = `projeto=eq.${projeto}`
     const channel = supabase
-      .channel('items-realtime')
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'items' }, (payload) => {
+      .channel(`items-realtime-${projeto}`)
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'items', filter }, (payload) => {
         setItems(prev => prev.map(i => i.id === payload.new.id ? { ...i, ...fromDb(payload.new) } : i))
       })
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'items' }, (payload) => {
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'items', filter }, (payload) => {
         setItems(prev => {
           if (prev.find(i => i.id === payload.new.id)) return prev
           return [...prev, fromDb(payload.new)].sort((a, b) => a.id - b.id)
         })
       })
-      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'items' }, (payload) => {
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'items', filter }, (payload) => {
         setItems(prev => prev.filter(i => i.id !== payload.old.id))
       })
       .subscribe()
 
     return () => supabase.removeChannel(channel)
-  }, [])
+  }, [projeto])
 
   const updateItem = useCallback((id, field, value) => {
     setItems(prev => prev.map(item =>
@@ -97,7 +103,7 @@ export function useStore() {
   const addItem = useCallback(async (resp) => {
     const tempId   = Date.now()
     const tempItem = {
-      id: tempId, resp, cat: '', catV2: '', fornecedores: '', det: '',
+      id: tempId, projeto, resp, cat: '', catV2: '', fornecedores: '', det: '',
       moeda: 'Real', qtd: 1, valorUn: 0, aliq: 0, orcado: 0,
       realizado: 0, realizadoUsd: 0, cotacaoReal: 0,
       status: '', obs: '', bookado: '', isNew: true,
@@ -107,6 +113,7 @@ export function useStore() {
     const { data, error } = await supabase
       .from('items')
       .insert({
+        projeto,
         resp, cat: '', cat_v2: '', fornecedores: '', det: '',
         moeda: 'Real', qtd: 1, valor_un: 0, aliq: 0, orcado: 0,
         realizado: 0, realizado_usd: 0, cotacao_real: 0,
@@ -122,7 +129,7 @@ export function useStore() {
     }
 
     setItems(prev => prev.map(i => i.id === tempId ? fromDb(data) : i))
-  }, [])
+  }, [projeto])
 
   const removeItem = useCallback(async (id) => {
     setItems(prev => prev.filter(i => i.id !== id))
@@ -166,11 +173,13 @@ export function useStore() {
 
   const computed = items.map(calcItem)
 
+  const orcamentoAtivo = ORCAMENTO[projeto] || {}
+
   const totals = {}
-  for (const resp of Object.keys(ORCAMENTO)) {
+  for (const resp of Object.keys(orcamentoAtivo)) {
     const mine = computed.filter(i => i.resp === resp)
     totals[resp] = {
-      orcado:     ORCAMENTO[resp],
+      orcado:     orcamentoAtivo[resp],
       realizado:  mine.reduce((s, i) => s + (i.realizado || 0), 0),
       imposto:    mine.reduce((s, i) => s + i.imposto, 0),
       semImp:     mine.reduce((s, i) => s + i.semImp, 0),
@@ -185,7 +194,7 @@ export function useStore() {
   }
 
   const grand = {
-    orcado:    Object.values(ORCAMENTO).reduce((s, v) => s + v, 0),
+    orcado:    Object.values(orcamentoAtivo).reduce((s, v) => s + v, 0),
     realizado: computed.reduce((s, i) => s + (i.realizado || 0), 0),
     imposto:   computed.reduce((s, i) => s + i.imposto, 0),
     semImp:    computed.reduce((s, i) => s + i.semImp, 0),

@@ -112,35 +112,51 @@ export function useStore(projeto = 'transmissao_copa') {
     if (error) console.error('Erro ao salvar múltiplos campos:', error)
   }, [])
 
-  const addItem = useCallback(async (resp) => {
+  const addItem = useCallback(async (resp, overrides = {}) => {
     const tempId   = Date.now()
-    const tempItem = {
+    const base = {
       id: tempId, projeto, resp, cat: '', catV2: '', fornecedores: '', det: '',
       moeda: 'Real', qtd: 1, valorUn: 0, aliq: 0, orcado: 0,
       realizado: 0, realizadoUsd: 0, cotacaoReal: 0,
-      status: '', obs: '', bookado: '', isNew: true,
+      status: '', obs: '', bookado: '', isNew: true, dias: [],
     }
+    const tempItem = { ...base, ...overrides }
     setItems(prev => [...prev, tempItem])
 
+    const row = {
+      projeto,
+      resp,
+      cat: overrides.cat ?? '',
+      cat_v2: overrides.catV2 ?? '',
+      fornecedores: overrides.fornecedores ?? '',
+      det: overrides.det ?? '',
+      moeda: overrides.moeda ?? 'Real',
+      qtd:      overrides.qtd     ?? 1,
+      valor_un: overrides.valorUn ?? 0,
+      aliq:     overrides.aliq    ?? 0,
+      orcado:   overrides.orcado  ?? 0,
+      realizado:     overrides.realizado    ?? 0,
+      realizado_usd: overrides.realizadoUsd ?? 0,
+      cotacao_real:  overrides.cotacaoReal  ?? 0,
+      status:  overrides.status  ?? '',
+      obs:     overrides.obs     ?? '',
+      bookado: overrides.bookado ?? '',
+      is_new:  overrides.isNew   ?? true,
+      dias:    overrides.dias    ?? [],
+    }
+
     const { data, error } = await supabase
-      .from('items')
-      .insert({
-        projeto,
-        resp, cat: '', cat_v2: '', fornecedores: '', det: '',
-        moeda: 'Real', qtd: 1, valor_un: 0, aliq: 0, orcado: 0,
-        realizado: 0, realizado_usd: 0, cotacao_real: 0,
-        status: '', obs: '', bookado: '', is_new: true,
-      })
-      .select()
-      .single()
+      .from('items').insert(row).select().single()
 
     if (error) {
       console.error('Erro ao adicionar:', error)
       setItems(prev => prev.filter(i => i.id !== tempId))
-      return
+      return null
     }
 
-    setItems(prev => prev.map(i => i.id === tempId ? fromDb(data) : i))
+    const created = fromDb(data)
+    setItems(prev => prev.map(i => i.id === tempId ? created : i))
+    return created
   }, [projeto])
 
   const removeItem = useCallback(async (id) => {

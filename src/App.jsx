@@ -7,6 +7,7 @@ import ProgressBar from './components/ProgressBar.jsx'
 import ItemsTable from './components/ItemsTable.jsx'
 import CasaItemsTable from './components/CasaItemsTable.jsx'
 import CronogramaGantt from './components/CronogramaGantt.jsx'
+import CronogramaByDay from './components/CronogramaByDay.jsx'
 import { OrcadoVsRealizadoChart, CategoriaChart, ImpostoChart } from './components/Charts.jsx'
 
 const Card = ({ children, style = {} }) => (
@@ -88,6 +89,7 @@ export default function App() {
   const tabs = activeProjeto === 'casa_rio'
     ? [
         { id: 'overview',    label: 'Visão Geral' },
+        { id: 'por_dia',     label: 'Por Dia' },
         { id: 'cronograma',  label: 'Cronograma' },
         { id: 'detail',      label: 'Itens' },
       ]
@@ -493,6 +495,24 @@ export default function App() {
                 </div>
               )}
             </Card>
+          </>
+        )}
+
+        {/* POR DIA — visão diária, somente Casa Rio */}
+        {activeTab === 'por_dia' && activeProjeto === 'casa_rio' && (
+          <>
+            <div style={{ marginBottom: 16 }}>
+              <h2 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
+                Visão por Dia — Casa Rio de Janeiro
+              </h2>
+              <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+                Cada dia é um card. Adicione serviços ativos em cada dia — o orçado é ajustado automaticamente.
+              </p>
+            </div>
+            <CronogramaByDay items={items} updateItemMulti={updateItemMulti}
+              addItem={addItem} removeItem={removeItem}
+              categorias={categorias} addCategoria={addCategoria}
+              isMobile={isMobile} />
           </>
         )}
 

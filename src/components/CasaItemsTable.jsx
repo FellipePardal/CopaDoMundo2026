@@ -119,12 +119,12 @@ export default function CasaItemsTable({
     updateItem(id, field, v)
   }
 
-  function handleQtdOrValorChange(item, field, raw) {
+  // Atualiza valor/dia e recomputa orçado baseado em dias.length (catálogo)
+  function handleValorChange(item, raw) {
     const v = parseFloat((raw + '').replace(',', '.')) || 0
-    updateItem(item.id, field, v)
-    const qtd     = field === 'qtd'     ? v : (item.qtd     || 0)
-    const valorUn = field === 'valorUn' ? v : (item.valorUn || 0)
-    updateItem(item.id, 'orcado', Math.round(qtd * valorUn * 100) / 100)
+    const diarias = (item.dias || []).length
+    updateItem(item.id, 'valorUn', v)
+    updateItem(item.id, 'orcado', Math.round(diarias * v * 100) / 100)
   }
 
   return (
@@ -221,24 +221,28 @@ export default function CasaItemsTable({
                   <div>
                     <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
                       letterSpacing: '0.06em', marginBottom: 2 }}>Diárias</div>
-                    <input type="number" step="0.01"
-                      defaultValue={item.qtd || ''}
-                      onBlur={e => handleQtdOrValorChange(item, 'qtd', e.target.value)}
-                      style={inputStyle} />
+                    <div style={{
+                      fontSize: 13, fontWeight: 700, fontFamily: 'var(--mono)',
+                      color: (item.dias || []).length > 0 ? 'var(--text)' : 'var(--muted2)',
+                      padding: '5px 0',
+                    }}>{(item.dias || []).length || '—'}</div>
                   </div>
                   <div>
                     <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
                       letterSpacing: '0.06em', marginBottom: 2 }}>Valor/Dia (R$)</div>
                     <input type="number" step="0.01"
                       defaultValue={item.valorUn || ''}
-                      onBlur={e => handleQtdOrValorChange(item, 'valorUn', e.target.value)}
+                      onBlur={e => handleValorChange(item, e.target.value)}
                       style={inputStyle} />
                   </div>
                   <div>
                     <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
                       letterSpacing: '0.06em', marginBottom: 2 }}>Orçado</div>
                     <div style={{ fontSize: 13, fontWeight: 700, fontFamily: 'var(--mono)',
-                      color: 'var(--text)', padding: '5px 0' }}>{fmt(item.orcado)}</div>
+                      color: (item.dias || []).length > 0 ? 'var(--text)' : 'var(--muted2)',
+                      padding: '5px 0' }}>
+                      {(item.dias || []).length > 0 ? fmt(item.orcado) : '—'}
+                    </div>
                   </div>
                   <div>
                     <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
@@ -367,20 +371,28 @@ export default function CasaItemsTable({
                           placeholder="Descrição"
                           style={{ ...inputStyle, fontFamily: 'var(--font)' }} />
                       </TD>
-                      <TD align="right" style={{ width: 100 }}>
-                        <input type="number" step="0.01"
-                          defaultValue={item.qtd || ''}
-                          onBlur={e => handleQtdOrValorChange(item, 'qtd', e.target.value)}
-                          style={{ ...inputStyle, textAlign: 'right' }} />
+                      <TD align="right" style={{ width: 100 }} mono>
+                        <span title={(item.dias || []).length > 0
+                          ? `Dias: ${(item.dias || []).join(', ')}`
+                          : 'Aloque dias na aba Cronograma ou Por Dia'}
+                          style={{
+                            fontWeight: 700,
+                            color: (item.dias || []).length > 0 ? 'var(--text)' : 'var(--muted2)',
+                          }}>
+                          {(item.dias || []).length || '—'}
+                        </span>
                       </TD>
                       <TD align="right" style={{ width: 140 }}>
                         <input type="number" step="0.01"
                           defaultValue={item.valorUn || ''}
-                          onBlur={e => handleQtdOrValorChange(item, 'valorUn', e.target.value)}
+                          onBlur={e => handleValorChange(item, e.target.value)}
                           style={{ ...inputStyle, textAlign: 'right' }} />
                       </TD>
-                      <TD align="right" mono style={{ fontWeight: 600, color: 'var(--text)' }}>
-                        {fmt(item.orcado)}
+                      <TD align="right" mono style={{
+                        fontWeight: 600,
+                        color: (item.dias || []).length > 0 ? 'var(--text)' : 'var(--muted2)',
+                      }}>
+                        {(item.dias || []).length > 0 ? fmt(item.orcado) : '—'}
                       </TD>
                       <TD align="right" style={{ width: 140 }}>
                         <input type="number" step="0.01"

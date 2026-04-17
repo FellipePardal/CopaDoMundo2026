@@ -24,7 +24,8 @@ function fromDb(row) {
     det:          row.det,
     moeda:     row.moeda,
     qtd:       Number(row.qtd),
-    valorUn:   Number(row.valor_un),
+    valorUn:     Number(row.valor_un),
+    valorUnReal: Number(row.valor_un_real) || 0,
     aliq:      Number(row.aliq),
     orcado:    Number(row.orcado),
     bookado:   row.bookado,
@@ -39,7 +40,7 @@ function fromDb(row) {
   }
 }
 
-const FIELD_MAP = { catV2: 'cat_v2', valorUn: 'valor_un', isNew: 'is_new', realizadoUsd: 'realizado_usd', cotacaoReal: 'cotacao_real' }
+const FIELD_MAP = { catV2: 'cat_v2', valorUn: 'valor_un', valorUnReal: 'valor_un_real', isNew: 'is_new', realizadoUsd: 'realizado_usd', cotacaoReal: 'cotacao_real' }
 const toDbField = (f) => FIELD_MAP[f] || f
 
 export function useStore(projeto = 'transmissao_copa') {

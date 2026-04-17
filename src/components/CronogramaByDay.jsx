@@ -159,9 +159,10 @@ export default function CronogramaByDay({ items, updateItemMulti, addItem, remov
     if (dias.includes(dia)) return
     const novoDias = [...dias, dia].sort((a, b) => a - b)
     await updateItemMulti(item.id, {
-      dias:   novoDias,
-      qtd:    novoDias.length,
-      orcado: Math.round(novoDias.length * (item.valorUn || 0) * 100) / 100,
+      dias:      novoDias,
+      qtd:       novoDias.length,
+      orcado:    Math.round(novoDias.length * (item.valorUn     || 0) * 100) / 100,
+      realizado: Math.round(novoDias.length * (item.valorUnReal || 0) * 100) / 100,
     })
     setPicking(null)
   }
@@ -185,8 +186,9 @@ export default function CronogramaByDay({ items, updateItemMulti, addItem, remov
     const dias = (item.dias || []).filter(d => d !== dia)
     await updateItemMulti(item.id, {
       dias,
-      qtd:    dias.length,
-      orcado: Math.round(dias.length * (item.valorUn || 0) * 100) / 100,
+      qtd:       dias.length,
+      orcado:    Math.round(dias.length * (item.valorUn     || 0) * 100) / 100,
+      realizado: Math.round(dias.length * (item.valorUnReal || 0) * 100) / 100,
     })
   }
 

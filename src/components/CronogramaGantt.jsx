@@ -16,8 +16,9 @@ export default function CronogramaGantt({ items, updateItemMulti, addItem, remov
       ? atual.filter(d => d !== dia)
       : [...atual, dia].sort((a, b) => a - b)
     const qtd = novo.length
-    const orcado = Math.round(qtd * (item.valorUn || 0) * 100) / 100
-    updateItemMulti(item.id, { dias: novo, qtd, orcado })
+    const orcado    = Math.round(qtd * (item.valorUn     || 0) * 100) / 100
+    const realizado = Math.round(qtd * (item.valorUnReal || 0) * 100) / 100
+    updateItemMulti(item.id, { dias: novo, qtd, orcado, realizado })
   }
 
   return (

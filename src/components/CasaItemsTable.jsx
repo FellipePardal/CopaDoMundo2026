@@ -119,12 +119,20 @@ export default function CasaItemsTable({
     updateItem(id, field, v)
   }
 
-  // Atualiza valor/dia e recomputa orçado baseado em dias.length (catálogo)
+  // Valor/dia orçado → recomputa orçado total
   function handleValorChange(item, raw) {
     const v = parseFloat((raw + '').replace(',', '.')) || 0
     const diarias = (item.dias || []).length
     updateItem(item.id, 'valorUn', v)
     updateItem(item.id, 'orcado', Math.round(diarias * v * 100) / 100)
+  }
+
+  // Valor/dia realizado (pós-negociação) → recomputa realizado total
+  function handleValorRealChange(item, raw) {
+    const v = parseFloat((raw + '').replace(',', '.')) || 0
+    const diarias = (item.dias || []).length
+    updateItem(item.id, 'valorUnReal', v)
+    updateItem(item.id, 'realizado', Math.round(diarias * v * 100) / 100)
   }
 
   return (
@@ -246,12 +254,26 @@ export default function CasaItemsTable({
                   </div>
                   <div>
                     <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
-                      letterSpacing: '0.06em', marginBottom: 2 }}>Realizado</div>
+                      letterSpacing: '0.06em', marginBottom: 2 }}>Valor/Dia Real (R$)</div>
                     <input type="number" step="0.01"
-                      defaultValue={item.realizado || ''}
-                      onBlur={e => handleNumberChange(item.id, 'realizado', e.target.value)}
+                      defaultValue={item.valorUnReal || ''}
+                      onBlur={e => handleValorRealChange(item, e.target.value)}
+                      placeholder="Pós-negociação"
                       style={inputStyle} />
                   </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 10 }}>
+                  <div>
+                    <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
+                      letterSpacing: '0.06em', marginBottom: 2 }}>Realizado</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, fontFamily: 'var(--mono)',
+                      color: (item.dias || []).length > 0 && item.valorUnReal > 0 ? '#65B32E' : 'var(--muted2)',
+                      padding: '5px 0' }}>
+                      {(item.dias || []).length > 0 && item.valorUnReal > 0 ? fmt(item.realizado) : '—'}
+                    </div>
+                  </div>
+                  <div />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 10 }}>
@@ -333,6 +355,7 @@ export default function CasaItemsTable({
                   <TH align="right">Diárias</TH>
                   <TH align="right">Valor/Dia (R$)</TH>
                   <TH align="right">Orçado (R$)</TH>
+                  <TH align="right">Valor/Dia Real (R$)</TH>
                   <TH align="right">Realizado (R$)</TH>
                   <TH align="right">Saldo (R$)</TH>
                   <TH>Status</TH>
@@ -396,9 +419,16 @@ export default function CasaItemsTable({
                       </TD>
                       <TD align="right" style={{ width: 140 }}>
                         <input type="number" step="0.01"
-                          defaultValue={item.realizado || ''}
-                          onBlur={e => handleNumberChange(item.id, 'realizado', e.target.value)}
+                          defaultValue={item.valorUnReal || ''}
+                          onBlur={e => handleValorRealChange(item, e.target.value)}
+                          placeholder="pós-negoc."
                           style={{ ...inputStyle, textAlign: 'right' }} />
+                      </TD>
+                      <TD align="right" mono style={{
+                        fontWeight: 600,
+                        color: (item.dias || []).length > 0 && item.valorUnReal > 0 ? '#65B32E' : 'var(--muted2)',
+                      }}>
+                        {(item.dias || []).length > 0 && item.valorUnReal > 0 ? fmt(item.realizado) : '—'}
                       </TD>
                       <TD align="right" mono style={{
                         fontWeight: 600,
@@ -427,7 +457,7 @@ export default function CasaItemsTable({
                 })}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={11} style={{ padding: '40px', textAlign: 'center',
+                    <td colSpan={12} style={{ padding: '40px', textAlign: 'center',
                       color: 'var(--muted)', fontSize: 13 }}>
                       Nenhum item. Clique em <strong>+ Novo item</strong>.
                     </td>
@@ -446,6 +476,7 @@ export default function CasaItemsTable({
                     borderTop: '2px solid var(--border)' }}>
                     {fmt(totals.orcado)}
                   </td>
+                  <td style={{ borderTop: '2px solid var(--border)' }} />
                   <td style={{ padding: '11px 13px', textAlign: 'right', fontSize: 13,
                     fontWeight: 700, fontFamily: 'var(--mono)', color: '#65B32E',
                     borderTop: '2px solid var(--border)' }}>

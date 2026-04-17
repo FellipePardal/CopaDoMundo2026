@@ -80,8 +80,8 @@ function AddServicoPicker({ items, categorias = [], dia, onAddExisting, onAddNew
             onAddNew({ cat: novo.cat.trim(), det: novo.det.trim(), valorUn: valor })
           }} style={{
             padding: '5px 14px', fontSize: 11.5, fontWeight: 600,
-            border: '1px solid rgba(27,63,173,0.35)',
-            background: 'rgba(27,63,173,0.12)', color: '#1B3FAD',
+            border: '1px solid rgba(74,158,219,0.35)',
+            background: 'rgba(74,158,219,0.12)', color: '#4A9EDB',
             borderRadius: 'var(--radius-sm)', cursor: 'pointer',
           }}>Criar</button>
         </div>
@@ -109,9 +109,9 @@ function AddServicoPicker({ items, categorias = [], dia, onAddExisting, onAddNew
       </select>
       <button disabled={!sel} onClick={() => sel && onAddExisting(Number(sel))} style={{
         padding: '6px 12px', fontSize: 11.5, fontWeight: 600,
-        border: '1px solid rgba(45,184,61,0.35)',
-        background: sel ? 'rgba(45,184,61,0.12)' : 'var(--surface)',
-        color: sel ? '#2DB83D' : 'var(--muted2)',
+        border: '1px solid rgba(101,179,46,0.35)',
+        background: sel ? 'rgba(101,179,46,0.12)' : 'var(--surface)',
+        color: sel ? '#65B32E' : 'var(--muted2)',
         borderRadius: 'var(--radius-sm)',
         cursor: sel ? 'pointer' : 'not-allowed',
         opacity: sel ? 1 : 0.6,
@@ -119,8 +119,8 @@ function AddServicoPicker({ items, categorias = [], dia, onAddExisting, onAddNew
       <span style={{ color: 'var(--muted2)', fontSize: 11 }}>ou</span>
       <button onClick={() => setModo('new')} style={{
         padding: '6px 12px', fontSize: 11.5, fontWeight: 600,
-        border: '1px solid rgba(27,63,173,0.35)',
-        background: 'rgba(27,63,173,0.12)', color: '#1B3FAD',
+        border: '1px solid rgba(74,158,219,0.35)',
+        background: 'rgba(74,158,219,0.12)', color: '#4A9EDB',
         borderRadius: 'var(--radius-sm)', cursor: 'pointer',
       }}>+ Novo serviço</button>
       <button onClick={onClose} style={{
@@ -296,7 +296,7 @@ export default function CronogramaByDay({ items, updateItemMulti, addItem, remov
                     </div>
                     <button onClick={() => removerDia(item, d.dia)}
                       title="Remover deste dia" style={{
-                        border: 'none', background: 'transparent', color: '#FF6B00',
+                        border: 'none', background: 'transparent', color: '#E05252',
                         fontSize: 13, cursor: 'pointer', padding: 2,
                       }}>✕</button>
                   </div>

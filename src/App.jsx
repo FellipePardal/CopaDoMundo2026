@@ -43,7 +43,7 @@ const Legend = ({ items }) => (
   </div>
 )
 
-const CircleAsset = ({ size = 120, color = '#F5C800', opacity = 0.06, style = {} }) => (
+const CircleAsset = ({ size = 120, color = '#65B32E', opacity = 0.06, style = {} }) => (
   <div style={{
     width: size, height: size, borderRadius: '50%',
     border: `2px solid ${color}`,
@@ -111,9 +111,9 @@ export default function App() {
 
       {!isMobile && (
         <>
-          <CircleAsset size={400} color="#F5C800" opacity={isDark ? 0.04 : 0.05} style={{ top: -120, right: -120 }} />
-          <CircleAsset size={200} color="#F5C800" opacity={isDark ? 0.06 : 0.07} style={{ top: -30, right: -30 }} />
-          <CircleAsset size={600} color="#1B3FAD" opacity={isDark ? 0.025 : 0.03} style={{ bottom: -200, left: -200 }} />
+          <CircleAsset size={400} color="#65B32E" opacity={isDark ? 0.04 : 0.05} style={{ top: -120, right: -120 }} />
+          <CircleAsset size={200} color="#65B32E" opacity={isDark ? 0.06 : 0.07} style={{ top: -30, right: -30 }} />
+          <CircleAsset size={600} color="#65B32E" opacity={isDark ? 0.025 : 0.03} style={{ bottom: -200, left: -200 }} />
         </>
       )}
 
@@ -136,21 +136,21 @@ export default function App() {
           <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 8 : 16 }}>
             <div style={{
               display: 'flex', alignItems: 'center',
-              fontFamily: "'Syne', sans-serif", fontWeight: 800,
+              fontFamily: "'Poppins', sans-serif", fontWeight: 800,
               fontSize: isMobile ? 16 : 18,
               letterSpacing: '-0.01em',
             }}>
-              <span style={{ color: 'var(--brand-amarelo)' }}>LIVE</span>
-              <span style={{ color: isDark ? '#fff' : 'var(--text-primary)' }}>M</span>
+              <span style={{ color: '#65B32E' }}>LIVE</span>
+              <span style={{ color: isDark ? '#fff' : '#0F172A' }}>M</span>
               <span style={{
                 display: 'inline-block',
                 width: isMobile ? 12 : 14,
                 height: isMobile ? 12 : 14,
                 borderRadius: '50%',
-                background: 'var(--brand-amarelo)', margin: '0 1px', verticalAlign: 'middle',
+                background: '#65B32E', margin: '0 1px', verticalAlign: 'middle',
                 position: 'relative', top: -1,
               }} />
-              <span style={{ color: isDark ? '#fff' : 'var(--text-primary)' }}>DE</span>
+              <span style={{ color: isDark ? '#fff' : '#0F172A' }}>DE</span>
             </div>
             {!isMobile && (
               <>
@@ -172,12 +172,11 @@ export default function App() {
             }}>
               {tabs.map(t => (
                 <button key={t.id} onClick={() => setActiveTab(t.id)} style={{
-                  padding: '6px 20px', borderRadius: 9, fontSize: 13,
-                  fontWeight: activeTab === t.id ? 600 : 500,
+                  padding: '6px 20px', borderRadius: 9, fontSize: 13, fontWeight: 500,
                   border: 'none',
-                  background: activeTab === t.id ? 'var(--surface-card)' : 'transparent',
-                  color: activeTab === t.id ? 'var(--brand-azul)' : 'var(--text-secondary)',
-                  boxShadow: activeTab === t.id ? 'inset 0 -2px 0 0 var(--brand-amarelo)' : 'none',
+                  background: activeTab === t.id ? 'rgba(101,179,46,0.18)' : 'transparent',
+                  color: activeTab === t.id ? '#65B32E' : 'var(--muted)',
+                  outline: activeTab === t.id ? '1px solid rgba(101,179,46,0.35)' : 'none',
                 }}>{t.label}</button>
               ))}
             </div>
@@ -216,11 +215,10 @@ export default function App() {
           }}>
             {tabs.map(t => (
               <button key={t.id} onClick={() => setActiveTab(t.id)} style={{
-                flex: 1, padding: '10px 4px', fontSize: 12,
-                fontWeight: activeTab === t.id ? 600 : 500,
-                border: 'none', borderBottom: activeTab === t.id ? `2px solid var(--brand-amarelo)` : '2px solid transparent',
+                flex: 1, padding: '10px 4px', fontSize: 12, fontWeight: 500,
+                border: 'none', borderBottom: activeTab === t.id ? `2px solid #65B32E` : '2px solid transparent',
                 background: 'transparent',
-                color: activeTab === t.id ? 'var(--brand-azul)' : 'var(--text-secondary)',
+                color: activeTab === t.id ? '#65B32E' : 'var(--muted)',
               }}>{t.label}</button>
             ))}
           </div>
@@ -251,9 +249,9 @@ export default function App() {
               <button key={p.id} onClick={() => setActiveProjeto(p.id)} style={{
                 padding: isMobile ? '6px 12px' : '6px 16px',
                 borderRadius: 8, fontSize: 12.5, fontWeight: 600,
-                border: `1px solid ${p.active ? 'rgba(45,184,61,0.40)' : 'var(--border)'}`,
-                background: p.active ? 'rgba(45,184,61,0.15)' : 'var(--surface)',
-                color: p.active ? '#2DB83D' : 'var(--muted)',
+                border: `1px solid ${p.active ? 'rgba(101,179,46,0.40)' : 'var(--border)'}`,
+                background: p.active ? 'rgba(101,179,46,0.15)' : 'var(--surface)',
+                color: p.active ? '#65B32E' : 'var(--muted)',
                 cursor: 'pointer',
               }}>{p.label}</button>
             ))}
@@ -269,9 +267,9 @@ export default function App() {
                     <button key={p.id} onClick={() => setActiveProjeto(p.id)} style={{
                       padding: isMobile ? '5px 10px' : '5px 14px',
                       borderRadius: 6, fontSize: 12, fontWeight: 500,
-                      border: `1px solid ${active ? '#1B3FAD' : 'var(--border)'}`,
-                      background: active ? 'rgba(27,63,173,0.12)' : 'transparent',
-                      color: active ? '#1B3FAD' : 'var(--muted)',
+                      border: `1px solid ${active ? '#4A9EDB' : 'var(--border)'}`,
+                      background: active ? 'rgba(74,158,219,0.12)' : 'transparent',
+                      color: active ? '#4A9EDB' : 'var(--muted)',
                       cursor: 'pointer',
                     }}>{p.label.replace('Casa ', '')}</button>
                   )
@@ -304,19 +302,19 @@ export default function App() {
               {!isCasa && (
                 <>
                   <KpiCard label="João Crispim"     value={fmtM(totals['João Crispim']?.orcado)}
-                    sub={`Real: ${fmtM(totals['João Crispim']?.realizado)}`} accent="#2DB83D" />
+                    sub={`Real: ${fmtM(totals['João Crispim']?.realizado)}`} accent="#65B32E" />
                   <KpiCard label="Ivan Souza"       value={fmtM(totals['Ivan Souza']?.orcado)}
-                    sub={`Real: ${fmtM(totals['Ivan Souza']?.realizado)}`} accent="#1B3FAD" />
+                    sub={`Real: ${fmtM(totals['Ivan Souza']?.realizado)}`} accent="#4A9EDB" />
                 </>
               )}
               <KpiCard label="Total Realizado"  value={fmtM(grand.realizado)}
-                sub={`${fmtPct(grand.pctExec)} exec.`} accent="#2DB83D" />
+                sub={`${fmtPct(grand.pctExec)} exec.`} accent="#65B32E" />
               <KpiCard label="Saldo"            value={fmtM(grand.saldo)}
                 sub={`${fmtPct(100 - grand.pctExec)} restante`}
-                accent={grand.saldo < 0 ? 'var(--brand-laranja)' : 'var(--brand-verde)'} />
+                accent={grand.saldo < 0 ? '#E05252' : '#F5A623'} />
               {isCasa && (
                 <KpiCard label="Categorias" value={Object.keys(byCategory).length}
-                  sub="cadastradas" accent="#1B3FAD" />
+                  sub="cadastradas" accent="#4A9EDB" />
               )}
             </div>
 
@@ -327,7 +325,7 @@ export default function App() {
                 {Object.entries(totals).map(([resp, t]) => (
                   <ProgressBar key={resp} label={resp === 'João Crispim' ? 'Operações' : 'Engenharia'}
                     pct={t.pctExec} realizado={t.realizado} orcado={t.orcado}
-                    color={resp === 'João Crispim' ? '#2DB83D' : '#1B3FAD'}
+                    color={resp === 'João Crispim' ? '#65B32E' : '#4A9EDB'}
                     initials={resp === 'João Crispim' ? 'OP' : 'ENG'}
                   />
                 ))}
@@ -344,7 +342,7 @@ export default function App() {
               {!isCasa && (
                 <Card style={{ padding: isMobile ? '16px' : '22px 24px' }}>
                   <CardTitle>Orçado vs Realizado</CardTitle>
-                  <Legend items={[['Orçado','#2DB83D'],['Realizado','#1B3FAD'],['Saldo','#CBD5E1']]} />
+                  <Legend items={[['Orçado','#65B32E'],['Realizado','#4A9EDB'],['Saldo','#CBD5E1']]} />
                   <OrcadoVsRealizadoChart totals={totals} />
                 </Card>
               )}
@@ -385,9 +383,9 @@ export default function App() {
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
                           {[
                             { label: 'Orçado',      val: v.orcado,           color: 'var(--text)'  },
-                            { label: 'Imposto',     val: v.imposto,          color: '#F5C800'      },
+                            { label: 'Imposto',     val: v.imposto,          color: '#F5A623'      },
                             { label: 'Sem Imposto', val: v.orcado-v.imposto, color: 'var(--muted)' },
-                            { label: 'Saldo',       val: saldo, color: saldo < 0 ? '#FF6B00' : 'var(--text2)' },
+                            { label: 'Saldo',       val: saldo, color: saldo < 0 ? '#E05252' : 'var(--text2)' },
                           ].map((c, i) => (
                             <div key={i}>
                               <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
@@ -407,9 +405,9 @@ export default function App() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
                       {[
                         { label: 'Orçado',      val: grand.orcado,   color: 'var(--text)' },
-                        { label: 'Imposto',     val: grand.imposto,  color: '#F5C800'     },
+                        { label: 'Imposto',     val: grand.imposto,  color: '#F5A623'     },
                         { label: 'Sem Imposto', val: grand.semImp,   color: 'var(--muted)'},
-                        { label: 'Realizado',   val: grand.realizado,color: '#2DB83D'     },
+                        { label: 'Realizado',   val: grand.realizado,color: '#65B32E'     },
                       ].map((c, i) => (
                         <div key={i}>
                           <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
@@ -460,10 +458,10 @@ export default function App() {
                             </td>
                             {[
                               { val: v.orcado,           color: 'var(--text)',  bold: true  },
-                              { val: v.imposto,          color: '#F5C800',      bold: false },
+                              { val: v.imposto,          color: '#F5A623',      bold: false },
                               { val: v.orcado-v.imposto, color: 'var(--muted)', bold: false },
-                              { val: v.realizado,        color: '#2DB83D',      bold: false },
-                              { val: saldo, color: saldo < 0 ? '#FF6B00' : 'var(--text2)', bold: false },
+                              { val: v.realizado,        color: '#65B32E',      bold: false },
+                              { val: saldo, color: saldo < 0 ? '#E05252' : 'var(--text2)', bold: false },
                             ].map((c, i) => (
                               <td key={i} style={{ padding:'10px 13px', textAlign:'right',
                                 fontFamily:'var(--mono)', fontSize:12.5, color: c.color,
@@ -486,7 +484,7 @@ export default function App() {
                         {[grand.orcado, grand.imposto, grand.semImp, grand.realizado, grand.saldo].map((v,i) => (
                           <td key={i} style={{ padding:'10px 13px', textAlign:'right',
                             fontFamily:'var(--mono)', fontSize:13, fontWeight:700,
-                            color: i===1?'#F5C800':i===3?'#2DB83D':i===4?(v<0?'#FF6B00':'var(--text)'):'var(--text)',
+                            color: i===1?'#F5A623':i===3?'#65B32E':i===4?(v<0?'#E05252':'var(--text)'):'var(--text)',
                             borderTop:'2px solid var(--border)' }}>
                             {fmt(v)}
                           </td>
@@ -526,7 +524,7 @@ export default function App() {
                 Cronograma — Casa Rio de Janeiro
               </h2>
               <p style={{ fontSize: 13, color: 'var(--muted)' }}>
-                13 dias · de <strong>29/mai</strong> a <strong>10/jun</strong>. Clique nas células para marcar em quais dias cada item está ativo — as <strong style={{ color: '#1B3FAD' }}>Diárias</strong> e o <strong style={{ color: '#1B3FAD' }}>Orçado</strong> são calculados automaticamente.
+                13 dias · de <strong>29/mai</strong> a <strong>10/jun</strong>. Clique nas células para marcar em quais dias cada item está ativo — as <strong style={{ color: '#4A9EDB' }}>Diárias</strong> e o <strong style={{ color: '#4A9EDB' }}>Orçado</strong> são calculados automaticamente.
               </p>
             </div>
             <CronogramaGantt items={items} updateItemMulti={updateItemMulti}
@@ -543,8 +541,8 @@ export default function App() {
               </h2>
               <p style={{ fontSize: 13, color: 'var(--muted)' }}>
                 {isCasa
-                  ? <>Adicione itens com <strong style={{ color: '#1B3FAD' }}>categoria</strong>, <strong style={{ color: '#1B3FAD' }}>diárias</strong> e <strong style={{ color: '#1B3FAD' }}>valor/dia</strong>.</>
-                  : <>Preencha <strong style={{ color: '#2DB83D' }}>Realizado (R$)</strong> e selecione o <strong style={{ color: '#2DB83D' }}>Status</strong>.</>
+                  ? <>Adicione itens com <strong style={{ color: '#4A9EDB' }}>categoria</strong>, <strong style={{ color: '#4A9EDB' }}>diárias</strong> e <strong style={{ color: '#4A9EDB' }}>valor/dia</strong>.</>
+                  : <>Preencha <strong style={{ color: '#65B32E' }}>Realizado (R$)</strong> e selecione o <strong style={{ color: '#65B32E' }}>Status</strong>.</>
                 }
               </p>
             </div>
@@ -576,11 +574,11 @@ export default function App() {
               gap: isMobile ? 10 : 14, marginBottom: isMobile ? 14 : 22 }}>
               <KpiCard label="Total Orçado"      value={fmtM(grand.orcado)} accent="#585455" />
               <KpiCard label="Total Imposto"     value={fmtM(grand.imposto)}
-                sub={`${fmtPct(grand.orcado>0?grand.imposto/grand.orcado*100:0)} do orçado`} accent="var(--brand-ciano)" />
-              <KpiCard label="Sem Imposto"       value={fmtM(grand.semImp)} accent="#2DB83D" />
+                sub={`${fmtPct(grand.orcado>0?grand.imposto/grand.orcado*100:0)} do orçado`} accent="#F5A623" />
+              <KpiCard label="Sem Imposto"       value={fmtM(grand.semImp)} accent="#65B32E" />
               <KpiCard label="Itens Tributados"
                 value={`${items.filter(i=>i.aliq>0).length}`}
-                sub="todos em dólar" accent="#1B3FAD" />
+                sub="todos em dólar" accent="#4A9EDB" />
             </div>
 
             <div style={{ display:'grid',
@@ -588,7 +586,7 @@ export default function App() {
               gap: isMobile ? 12 : 16, marginBottom: isMobile ? 14 : 20 }}>
               <Card style={{ padding: isMobile ? '16px' : '22px 24px' }}>
                 <CardTitle>Imposto por Categoria</CardTitle>
-                <Legend items={[['Base','#CBD5E1'],['Imposto','#F5C800']]} />
+                <Legend items={[['Base','#CBD5E1'],['Imposto','#F5A623']]} />
                 <ImpostoChart byCategory={byCategory} />
               </Card>
               <Card style={{ padding: isMobile ? '16px' : '22px 24px' }}>
@@ -605,36 +603,36 @@ export default function App() {
                     return (
                       <div key={label} style={{
                         padding:'14px 16px', borderRadius:'var(--radius-md)',
-                        background:'rgba(245,200,0,0.06)', border:'1px solid rgba(245,200,0,0.20)',
-                        borderLeft:'3px solid #F5C800',
+                        background:'rgba(245,166,35,0.06)', border:'1px solid rgba(245,166,35,0.20)',
+                        borderLeft:'3px solid #F5A623',
                       }}>
                         <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4 }}>
-                          <span style={{ fontWeight:700, fontSize:16, color:'#F5C800', fontFamily:'var(--mono)' }}>{label}</span>
+                          <span style={{ fontWeight:700, fontSize:16, color:'#F5A623', fontFamily:'var(--mono)' }}>{label}</span>
                           <span style={{ fontSize:11, color:'var(--muted)' }}>{mine.length} itens</span>
                         </div>
                         <div style={{ fontSize:11, color:'var(--muted)', marginBottom:8 }}>{desc}</div>
                         <div style={{ display:'flex', gap: isMobile ? 10 : 16, fontSize:11.5,
                           fontFamily:'var(--mono)', flexWrap: 'wrap' }}>
                           <span style={{ color:'var(--text2)' }}>Orçado: <strong>{fmtM(total)}</strong></span>
-                          <span style={{ color:'#F5C800' }}>Imposto: <strong>{fmtM(imp)}</strong></span>
-                          <span style={{ color:'#2DB83D' }}>Base: <strong>{fmtM(total-imp)}</strong></span>
+                          <span style={{ color:'#F5A623' }}>Imposto: <strong>{fmtM(imp)}</strong></span>
+                          <span style={{ color:'#65B32E' }}>Base: <strong>{fmtM(total-imp)}</strong></span>
                         </div>
                       </div>
                     )
                   })}
                   <div style={{
                     padding:'14px 16px', borderRadius:'var(--radius-md)',
-                    background:'rgba(45,184,61,0.06)', border:'1px solid rgba(45,184,61,0.20)',
-                    borderLeft:'3px solid #2DB83D',
+                    background:'rgba(101,179,46,0.06)', border:'1px solid rgba(101,179,46,0.20)',
+                    borderLeft:'3px solid #65B32E',
                   }}>
                     <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4 }}>
-                      <span style={{ fontWeight:700, fontSize:16, color:'#2DB83D', fontFamily:'var(--mono)' }}>0,00%</span>
+                      <span style={{ fontWeight:700, fontSize:16, color:'#65B32E', fontFamily:'var(--mono)' }}>0,00%</span>
                       <span style={{ fontSize:11, color:'var(--muted)' }}>{items.filter(i=>!i.aliq).length} itens</span>
                     </div>
                     <div style={{ fontSize:11, color:'var(--muted)', marginBottom:8 }}>
                       Itens em Real — Kits Mojo, Reporters, Freelancers, Ivan Souza
                     </div>
-                    <div style={{ fontSize:11.5, fontFamily:'var(--mono)', color:'#2DB83D' }}>
+                    <div style={{ fontSize:11.5, fontFamily:'var(--mono)', color:'#65B32E' }}>
                       Total: <strong>{fmtM(items.filter(i=>!i.aliq).reduce((s,i)=>s+i.orcado,0))}</strong>
                     </div>
                   </div>
@@ -650,16 +648,16 @@ export default function App() {
                     <div key={item.id} style={{
                       padding: '12px 14px', borderRadius: 'var(--radius-md)',
                       background: 'var(--surface2)', border: '1px solid var(--border)',
-                      borderLeft: '3px solid #F5C800',
+                      borderLeft: '3px solid #F5A623',
                     }}>
                       <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 8,
                         color: 'var(--text)', lineHeight: 1.3 }}>{item.det}</div>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
                         {[
-                          { label: 'Alíquota',    val: `${(item.aliq*100).toFixed(2)}%`, color: '#F5C800' },
+                          { label: 'Alíquota',    val: `${(item.aliq*100).toFixed(2)}%`, color: '#F5A623' },
                           { label: 'Orçado',      val: fmt(item.orcado),    color: 'var(--text)'  },
-                          { label: 'Imposto',     val: fmt(item.imposto),   color: '#F5C800'      },
-                          { label: 'Sem Imposto', val: fmt(item.semImp),    color: '#2DB83D'      },
+                          { label: 'Imposto',     val: fmt(item.imposto),   color: '#F5A623'      },
+                          { label: 'Sem Imposto', val: fmt(item.semImp),    color: '#65B32E'      },
                         ].map((c, i) => (
                           <div key={i}>
                             <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
@@ -699,8 +697,8 @@ export default function App() {
                           </td>
                           <td style={{ padding:'9px 13px', borderBottom:'1px solid var(--border)' }}>
                             <span style={{ padding:'2px 8px', borderRadius:4, fontSize:10, fontWeight:700,
-                              background:'rgba(27,63,173,0.12)', color:'#1B3FAD',
-                              border:'1px solid rgba(27,63,173,0.30)' }}>USD</span>
+                              background:'rgba(74,158,219,0.12)', color:'#4A9EDB',
+                              border:'1px solid rgba(74,158,219,0.30)' }}>USD</span>
                           </td>
                           {[item.qtd, 5.6, item.valorUn].map((v,i)=>(
                             <td key={i} style={{ padding:'9px 13px', textAlign:'right',
@@ -710,8 +708,8 @@ export default function App() {
                             </td>
                           ))}
                           <td style={{ padding:'9px 13px', textAlign:'right', fontFamily:'var(--mono)',
-                            fontWeight:700, color:'#F5C800', borderBottom:'1px solid var(--border)',
-                            background:'rgba(245,200,0,0.04)' }}>
+                            fontWeight:700, color:'#F5A623', borderBottom:'1px solid var(--border)',
+                            background:'rgba(245,166,35,0.04)' }}>
                             {(item.aliq*100).toFixed(2)}%
                           </td>
                           <td style={{ padding:'9px 13px', textAlign:'right', fontFamily:'var(--mono)',
@@ -719,12 +717,12 @@ export default function App() {
                             {fmt(item.orcado)}
                           </td>
                           <td style={{ padding:'9px 13px', textAlign:'right', fontFamily:'var(--mono)',
-                            fontWeight:700, color:'#F5C800', borderBottom:'1px solid var(--border)',
-                            background:'rgba(245,200,0,0.04)' }}>
+                            fontWeight:700, color:'#F5A623', borderBottom:'1px solid var(--border)',
+                            background:'rgba(245,166,35,0.04)' }}>
                             {fmt(item.imposto)}
                           </td>
                           <td style={{ padding:'9px 13px', textAlign:'right', fontFamily:'var(--mono)',
-                            color:'#2DB83D', borderBottom:'1px solid var(--border)' }}>
+                            color:'#65B32E', borderBottom:'1px solid var(--border)' }}>
                             {fmt(item.semImp)}
                           </td>
                         </tr>
@@ -738,8 +736,8 @@ export default function App() {
                         </td>
                         {[
                           { val:items.filter(i=>i.aliq>0).reduce((s,i)=>s+i.orcado,0),  color:'var(--text)' },
-                          { val:items.filter(i=>i.aliq>0).reduce((s,i)=>s+i.imposto,0), color:'#F5C800' },
-                          { val:items.filter(i=>i.aliq>0).reduce((s,i)=>s+i.semImp,0),  color:'#2DB83D' },
+                          { val:items.filter(i=>i.aliq>0).reduce((s,i)=>s+i.imposto,0), color:'#F5A623' },
+                          { val:items.filter(i=>i.aliq>0).reduce((s,i)=>s+i.semImp,0),  color:'#65B32E' },
                         ].map((c,i)=>(
                           <td key={i} style={{ padding:'10px 13px', textAlign:'right', fontSize:13,
                             fontWeight:700, fontFamily:'var(--mono)', color:c.color,
@@ -763,10 +761,10 @@ export default function App() {
             display:'flex', justifyContent:'space-between', alignItems:'center' }}>
             <div style={{ display:'flex', alignItems:'center', gap:8 }}>
               <span style={{ fontFamily:"'Poppins',sans-serif", fontWeight:800, fontSize:13 }}>
-                <span style={{ color:'var(--brand-amarelo)' }}>LIVE</span>
+                <span style={{ color:'#65B32E' }}>LIVE</span>
                 <span style={{ color:'var(--text)' }}>M</span>
                 <span style={{ display:'inline-block', width:8, height:8, borderRadius:'50%',
-                  background:'var(--brand-amarelo)', margin:'0 1px', verticalAlign:'middle', position:'relative', top:-1 }} />
+                  background:'#65B32E', margin:'0 1px', verticalAlign:'middle', position:'relative', top:-1 }} />
                 <span style={{ color:'var(--text)' }}>DE</span>
               </span>
               <span style={{ fontSize:11, color:'var(--muted2)' }}>

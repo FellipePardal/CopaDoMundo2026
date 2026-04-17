@@ -16,8 +16,8 @@ export const STATUS_COLOR = {
 }
 
 export const CAT_COLORS = [
-  '#F5C800','#1B3FAD','#2DB83D','#28C6C6',
-  '#FF6B00','#8B5CF6','#EC4899','#F0C000',
+  '#3B82F6','#10B981','#8B5CF6','#F59E0B',
+  '#EF4444','#06B6D4','#EC4899','#84CC16',
 ]
 
 export function fmt(v, decimals = 0) {

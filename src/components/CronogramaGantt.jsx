@@ -42,8 +42,8 @@ export default function CronogramaGantt({ items, updateItemMulti, addItem, remov
           <button onClick={() => addItem('')} style={{
             padding: '7px 16px', borderRadius: 'var(--radius-sm)',
             fontSize: 12, fontWeight: 600,
-            background: 'rgba(27,63,173,0.12)', color: '#1B3FAD',
-            border: '1px solid rgba(27,63,173,0.35)', cursor: 'pointer',
+            background: 'rgba(74,158,219,0.12)', color: '#4A9EDB',
+            border: '1px solid rgba(74,158,219,0.35)', cursor: 'pointer',
           }}>+ Novo item</button>
         </div>
       </div>
@@ -216,7 +216,7 @@ export default function CronogramaGantt({ items, updateItemMulti, addItem, remov
                     <td style={{
                       padding: '9px 10px', textAlign: 'right',
                       fontFamily: 'var(--mono)', fontSize: 12,
-                      color: item.realizado > 0 ? '#2DB83D' : 'var(--muted2)',
+                      color: item.realizado > 0 ? '#65B32E' : 'var(--muted2)',
                       borderLeft: '1px solid var(--border)',
                       borderBottom: '1px solid var(--border)',
                     }}>
@@ -229,7 +229,7 @@ export default function CronogramaGantt({ items, updateItemMulti, addItem, remov
                       borderBottom: '1px solid var(--border)',
                     }}>
                       <button onClick={() => removeItem(item.id)} title="Remover" style={{
-                        border: 'none', background: 'transparent', color: '#FF6B00',
+                        border: 'none', background: 'transparent', color: '#E05252',
                         fontSize: 14, cursor: 'pointer', padding: 4,
                       }}>✕</button>
                     </td>
@@ -269,7 +269,7 @@ export default function CronogramaGantt({ items, updateItemMulti, addItem, remov
                 }}>{fmt(totals.orcado)}</td>
                 <td style={{
                   padding: '10px 10px', textAlign: 'right', fontSize: 13,
-                  fontWeight: 700, fontFamily: 'var(--mono)', color: '#2DB83D',
+                  fontWeight: 700, fontFamily: 'var(--mono)', color: '#65B32E',
                   borderTop: '2px solid var(--border)',
                   borderLeft: '1px solid var(--border)',
                 }}>{fmt(totals.realizado)}</td>

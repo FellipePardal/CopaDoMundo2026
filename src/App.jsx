@@ -307,11 +307,19 @@ export default function App() {
                     sub={`Real: ${fmtM(totals['Ivan Souza']?.realizado)}`} accent="#4A9EDB" />
                 </>
               )}
-              <KpiCard label="Total Realizado"  value={fmtM(grand.realizado)}
-                sub={`${fmtPct(grand.pctExec)} exec.`} accent="#65B32E" />
-              <KpiCard label="Saldo"            value={fmtM(grand.saldo)}
-                sub={`${fmtPct(100 - grand.pctExec)} restante`}
-                accent={grand.saldo < 0 ? '#E05252' : '#F5A623'} />
+              <KpiCard
+                label={isCasa ? 'Efetivo' : 'Total Realizado'}
+                value={fmtM(isCasa ? grand.efetivo : grand.realizado)}
+                sub={isCasa
+                  ? `${fmtPct(grand.pctEfetivo)} do orçado`
+                  : `${fmtPct(grand.pctExec)} exec.`}
+                accent="#65B32E" />
+              <KpiCard label="Saldo"
+                value={fmtM(isCasa ? grand.saldoEfetivo : grand.saldo)}
+                sub={isCasa
+                  ? `${fmtPct(100 - grand.pctEfetivo)} restante`
+                  : `${fmtPct(100 - grand.pctExec)} restante`}
+                accent={(isCasa ? grand.saldoEfetivo : grand.saldo) < 0 ? '#E05252' : '#F5A623'} />
               {isCasa && (
                 <KpiCard label="Categorias" value={Object.keys(byCategory).length}
                   sub="cadastradas" accent="#4A9EDB" />
@@ -370,7 +378,8 @@ export default function App() {
                 /* Mobile: cards por categoria */
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {Object.entries(byCategory).sort((a,b)=>b[1].orcado-a[1].orcado).map(([cat, v], idx) => {
-                    const saldo = v.orcado - v.realizado
+                    const usadoCat = isCasa ? v.efetivo : v.realizado
+                    const saldo = v.orcado - usadoCat
                     return (
                       <div key={cat} style={{
                         padding: '12px 14px', borderRadius: 'var(--radius-md)',
@@ -385,7 +394,7 @@ export default function App() {
                             { label: 'Orçado',      val: v.orcado,           color: 'var(--text)'  },
                             !isCasa && { label: 'Imposto',     val: v.imposto,          color: '#F5A623'      },
                             !isCasa && { label: 'Sem Imposto', val: v.orcado-v.imposto, color: 'var(--muted)' },
-                            isCasa && { label: 'Realizado', val: v.realizado, color: '#65B32E' },
+                            isCasa && { label: 'Efetivo', val: v.efetivo, color: '#65B32E' },
                             { label: 'Saldo',       val: saldo, color: saldo < 0 ? '#E05252' : 'var(--text2)' },
                           ].filter(Boolean).map((c, i) => (
                             <div key={i}>
@@ -408,7 +417,8 @@ export default function App() {
                         { label: 'Orçado',      val: grand.orcado,   color: 'var(--text)' },
                         !isCasa && { label: 'Imposto',     val: grand.imposto,  color: '#F5A623'     },
                         !isCasa && { label: 'Sem Imposto', val: grand.semImp,   color: 'var(--muted)'},
-                        { label: 'Realizado',   val: grand.realizado,color: '#65B32E'     },
+                        { label: isCasa ? 'Efetivo' : 'Realizado',
+                          val: isCasa ? grand.efetivo : grand.realizado, color: '#65B32E' },
                       ].filter(Boolean).map((c, i) => (
                         <div key={i}>
                           <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
@@ -427,7 +437,7 @@ export default function App() {
                     <thead>
                       <tr>
                         {(isCasa
-                          ? ['Categoria','Itens','Orçado (R$)','Realizado (R$)','Saldo (R$)']
+                          ? ['Categoria','Itens','Orçado (R$)','Efetivo (R$)','Saldo (R$)']
                           : ['Categoria','Resp.','Itens','Orçado (R$)','Imposto (R$)','Sem Imposto (R$)','Realizado (R$)','Saldo (R$)']
                         ).map((h, i) => (
                           <th key={h} style={{ padding: '9px 13px', textAlign: i > (isCasa ? 1 : 2) ? 'right' : 'left',
@@ -440,7 +450,8 @@ export default function App() {
                     </thead>
                     <tbody>
                       {Object.entries(byCategory).sort((a,b)=>b[1].orcado-a[1].orcado).map(([cat, v], idx) => {
-                        const saldo = v.orcado - v.realizado
+                        const usadoCat = isCasa ? v.efetivo : v.realizado
+                        const saldo = v.orcado - usadoCat
                         return (
                           <tr key={cat}
                             onMouseEnter={e=>e.currentTarget.style.background='var(--surface2)'}
@@ -466,7 +477,7 @@ export default function App() {
                               { val: v.orcado,           color: 'var(--text)',  bold: true  },
                               !isCasa && { val: v.imposto,          color: '#F5A623',      bold: false },
                               !isCasa && { val: v.orcado-v.imposto, color: 'var(--muted)', bold: false },
-                              { val: v.realizado,        color: '#65B32E',      bold: false },
+                              { val: usadoCat,           color: '#65B32E',      bold: false },
                               { val: saldo, color: saldo < 0 ? '#E05252' : 'var(--text2)', bold: false },
                             ].filter(Boolean).map((c, i) => (
                               <td key={i} style={{ padding:'10px 13px', textAlign:'right',
@@ -489,9 +500,9 @@ export default function App() {
                         </td>
                         {(isCasa
                           ? [
-                              { val: grand.orcado,    color: 'var(--text)' },
-                              { val: grand.realizado, color: '#65B32E'     },
-                              { val: grand.saldo,     color: grand.saldo<0?'#E05252':'var(--text)' },
+                              { val: grand.orcado,        color: 'var(--text)' },
+                              { val: grand.efetivo,       color: '#65B32E'     },
+                              { val: grand.saldoEfetivo,  color: grand.saldoEfetivo<0?'#E05252':'var(--text)' },
                             ]
                           : [
                               { val: grand.orcado,    color: 'var(--text)' },

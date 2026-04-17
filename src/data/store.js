@@ -8,9 +8,10 @@ export function calcItem(item) {
   const imposto = Math.round(orc * aliq * 100) / 100
   const semImp  = Math.round((orc - imposto) * 100) / 100
   const real    = item.realizado || 0
+  const efetivo = real > 0 ? real : orc
   const diff    = real > 0 ? Math.round((real - orc) * 100) / 100 : null
   const pctExec = orc > 0 && real > 0 ? Math.round((real / orc) * 1000) / 10 : 0
-  return { ...item, imposto, semImp, diff, pctExec }
+  return { ...item, imposto, semImp, diff, pctExec, efetivo }
 }
 
 function fromDb(row) {
@@ -229,18 +230,23 @@ export function useStore(projeto = 'transmissao_copa') {
   const grand = {
     orcado:    orcamentoTarget > 0 ? orcamentoTarget : orcamentoItens,
     realizado: computed.reduce((s, i) => s + (i.realizado || 0), 0),
+    efetivo:   computed.reduce((s, i) => s + (i.efetivo   || 0), 0),
     imposto:   computed.reduce((s, i) => s + i.imposto, 0),
     semImp:    computed.reduce((s, i) => s + i.semImp, 0),
   }
-  grand.saldo   = grand.orcado - grand.realizado
+  grand.saldo        = grand.orcado - grand.realizado
+  grand.saldoEfetivo = grand.orcado - grand.efetivo
   grand.pctExec = grand.orcado > 0
     ? Math.round(grand.realizado / grand.orcado * 1000) / 10 : 0
+  grand.pctEfetivo = grand.orcado > 0
+    ? Math.round(grand.efetivo / grand.orcado * 1000) / 10 : 0
 
   const byCategory = computed.reduce((acc, i) => {
     const key = i.cat || 'Sem categoria'
-    if (!acc[key]) acc[key] = { orcado: 0, realizado: 0, imposto: 0, n: 0 }
+    if (!acc[key]) acc[key] = { orcado: 0, realizado: 0, efetivo: 0, imposto: 0, n: 0 }
     acc[key].orcado    += i.orcado
     acc[key].realizado += i.realizado || 0
+    acc[key].efetivo   += i.efetivo   || 0
     acc[key].imposto   += i.imposto
     acc[key].n         += 1
     return acc

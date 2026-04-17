@@ -383,10 +383,11 @@ export default function App() {
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
                           {[
                             { label: 'Orçado',      val: v.orcado,           color: 'var(--text)'  },
-                            { label: 'Imposto',     val: v.imposto,          color: '#F5A623'      },
-                            { label: 'Sem Imposto', val: v.orcado-v.imposto, color: 'var(--muted)' },
+                            !isCasa && { label: 'Imposto',     val: v.imposto,          color: '#F5A623'      },
+                            !isCasa && { label: 'Sem Imposto', val: v.orcado-v.imposto, color: 'var(--muted)' },
+                            isCasa && { label: 'Realizado', val: v.realizado, color: '#65B32E' },
                             { label: 'Saldo',       val: saldo, color: saldo < 0 ? '#E05252' : 'var(--text2)' },
-                          ].map((c, i) => (
+                          ].filter(Boolean).map((c, i) => (
                             <div key={i}>
                               <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
                                 letterSpacing: '0.06em', marginBottom: 2 }}>{c.label}</div>
@@ -405,10 +406,10 @@ export default function App() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
                       {[
                         { label: 'Orçado',      val: grand.orcado,   color: 'var(--text)' },
-                        { label: 'Imposto',     val: grand.imposto,  color: '#F5A623'     },
-                        { label: 'Sem Imposto', val: grand.semImp,   color: 'var(--muted)'},
+                        !isCasa && { label: 'Imposto',     val: grand.imposto,  color: '#F5A623'     },
+                        !isCasa && { label: 'Sem Imposto', val: grand.semImp,   color: 'var(--muted)'},
                         { label: 'Realizado',   val: grand.realizado,color: '#65B32E'     },
-                      ].map((c, i) => (
+                      ].filter(Boolean).map((c, i) => (
                         <div key={i}>
                           <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
                             letterSpacing: '0.06em', marginBottom: 2 }}>{c.label}</div>
@@ -425,8 +426,11 @@ export default function App() {
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                       <tr>
-                        {['Categoria','Resp.','Itens','Orçado (R$)','Imposto (R$)','Sem Imposto (R$)','Realizado (R$)','Saldo (R$)'].map((h, i) => (
-                          <th key={h} style={{ padding: '9px 13px', textAlign: i > 2 ? 'right' : 'left',
+                        {(isCasa
+                          ? ['Categoria','Itens','Orçado (R$)','Realizado (R$)','Saldo (R$)']
+                          : ['Categoria','Resp.','Itens','Orçado (R$)','Imposto (R$)','Sem Imposto (R$)','Realizado (R$)','Saldo (R$)']
+                        ).map((h, i) => (
+                          <th key={h} style={{ padding: '9px 13px', textAlign: i > (isCasa ? 1 : 2) ? 'right' : 'left',
                             fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em',
                             color: 'var(--muted)', borderBottom: '1px solid var(--border)' }}>
                             {h}
@@ -448,21 +452,23 @@ export default function App() {
                                 background: CAT_COLORS[idx%CAT_COLORS.length], marginRight:10 }} />
                               {cat}
                             </td>
-                            <td style={{ padding:'10px 13px', fontSize:11, color:'var(--muted)',
-                              borderBottom:'1px solid var(--border)' }}>
-                              {items.find(i=>i.cat===cat)?.resp || '—'}
-                            </td>
+                            {!isCasa && (
+                              <td style={{ padding:'10px 13px', fontSize:11, color:'var(--muted)',
+                                borderBottom:'1px solid var(--border)' }}>
+                                {items.find(i=>i.cat===cat)?.resp || '—'}
+                              </td>
+                            )}
                             <td style={{ padding:'10px 13px', fontSize:12, textAlign:'center',
                               color:'var(--muted)', borderBottom:'1px solid var(--border)' }}>
                               {v.n}
                             </td>
                             {[
                               { val: v.orcado,           color: 'var(--text)',  bold: true  },
-                              { val: v.imposto,          color: '#F5A623',      bold: false },
-                              { val: v.orcado-v.imposto, color: 'var(--muted)', bold: false },
+                              !isCasa && { val: v.imposto,          color: '#F5A623',      bold: false },
+                              !isCasa && { val: v.orcado-v.imposto, color: 'var(--muted)', bold: false },
                               { val: v.realizado,        color: '#65B32E',      bold: false },
                               { val: saldo, color: saldo < 0 ? '#E05252' : 'var(--text2)', bold: false },
-                            ].map((c, i) => (
+                            ].filter(Boolean).map((c, i) => (
                               <td key={i} style={{ padding:'10px 13px', textAlign:'right',
                                 fontFamily:'var(--mono)', fontSize:12.5, color: c.color,
                                 fontWeight: c.bold ? 600 : 400,
@@ -476,17 +482,30 @@ export default function App() {
                     </tbody>
                     <tfoot>
                       <tr style={{ background: 'var(--surface2)' }}>
-                        <td colSpan={3} style={{ padding:'10px 13px', fontSize:12,
+                        <td colSpan={isCasa ? 2 : 3} style={{ padding:'10px 13px', fontSize:12,
                           fontWeight:700, color:'var(--muted)',
                           borderTop:'2px solid var(--border)' }}>
                           Total Geral
                         </td>
-                        {[grand.orcado, grand.imposto, grand.semImp, grand.realizado, grand.saldo].map((v,i) => (
+                        {(isCasa
+                          ? [
+                              { val: grand.orcado,    color: 'var(--text)' },
+                              { val: grand.realizado, color: '#65B32E'     },
+                              { val: grand.saldo,     color: grand.saldo<0?'#E05252':'var(--text)' },
+                            ]
+                          : [
+                              { val: grand.orcado,    color: 'var(--text)' },
+                              { val: grand.imposto,   color: '#F5A623'     },
+                              { val: grand.semImp,    color: 'var(--text)' },
+                              { val: grand.realizado, color: '#65B32E'     },
+                              { val: grand.saldo,     color: grand.saldo<0?'#E05252':'var(--text)' },
+                            ]
+                        ).map((c,i) => (
                           <td key={i} style={{ padding:'10px 13px', textAlign:'right',
                             fontFamily:'var(--mono)', fontSize:13, fontWeight:700,
-                            color: i===1?'#F5A623':i===3?'#65B32E':i===4?(v<0?'#E05252':'var(--text)'):'var(--text)',
+                            color: c.color,
                             borderTop:'2px solid var(--border)' }}>
-                            {fmt(v)}
+                            {fmt(c.val)}
                           </td>
                         ))}
                       </tr>

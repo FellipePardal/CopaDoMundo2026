@@ -1,38 +1,33 @@
 import React from 'react'
 
-export default function KpiCard({ label, value, sub, accent = '#65B32E', icon }) {
+export default function KpiCard({ label, value, sub, accent = 'var(--text-primary)', icon }) {
   return (
     <div style={{
-      background: 'rgba(255,255,255,0.07)',
-      border: '1px solid rgba(255,255,255,0.10)',
+      background: 'var(--surface-card)',
+      border: '1px solid var(--border-default)',
       borderRadius: 'var(--radius-lg)',
       padding: '20px 22px',
       position: 'relative',
       overflow: 'hidden',
+      boxShadow: 'var(--shadow-sm)',
     }}>
+      {/* top amarelo accent */}
       <div style={{
-        position: 'absolute', top: -20, right: -20,
-        width: 80, height: 80, borderRadius: '50%',
-        border: `2px solid ${accent}30`,
-        pointerEvents: 'none',
-      }} />
-      <div style={{
-        position: 'absolute', top: -8, right: -8,
-        width: 40, height: 40, borderRadius: '50%',
-        background: `${accent}18`,
-        pointerEvents: 'none',
+        position: 'absolute', top: 0, left: 0, right: 0,
+        height: 3, background: 'var(--brand-amarelo)',
+        borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
       }} />
 
       <div style={{
-        fontSize: 10, fontWeight: 600, color: 'var(--muted)',
+        fontSize: 10, fontWeight: 600, color: 'var(--text-secondary)',
         textTransform: 'uppercase', letterSpacing: '0.1em',
-        marginBottom: 10,
+        marginTop: 4, marginBottom: 10,
       }}>
         {label}
       </div>
 
       <div style={{
-        fontSize: 22, fontWeight: 700, color: 'var(--text)',
+        fontSize: 26, fontWeight: 700, color: accent,
         fontFamily: 'var(--mono)', letterSpacing: '-0.02em',
         lineHeight: 1.1, marginBottom: 6,
       }}>
@@ -40,16 +35,10 @@ export default function KpiCard({ label, value, sub, accent = '#65B32E', icon })
       </div>
 
       {sub && (
-        <div style={{ fontSize: 11, color: 'var(--muted)', fontWeight: 400 }}>
+        <div style={{ fontSize: 11, color: 'var(--text-secondary)', fontWeight: 400 }}>
           {sub}
         </div>
       )}
-
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        height: 3, background: accent,
-        borderRadius: '0 0 var(--radius-lg) var(--radius-lg)',
-      }} />
     </div>
   )
 }

@@ -51,15 +51,15 @@ export function OrcadoVsRealizadoChart({ totals }) {
       <BarChart data={data} barCategoryGap="35%" barGap={3}>
         <CartesianGrid strokeDasharray="2 4" stroke="var(--border)" vertical={false} />
         <XAxis dataKey="name"
-          tick={{ fill: 'var(--muted)', fontSize: 12, fontFamily: 'Poppins' }}
+          tick={{ fill: 'var(--text-secondary)', fontSize: 12, fontFamily: 'Syne' }}
           axisLine={false} tickLine={false} />
         <YAxis tickFormatter={fmtM}
-          tick={{ fill: 'var(--muted2)', fontSize: 11 }}
+          tick={{ fill: 'var(--text-disabled)', fontSize: 11 }}
           axisLine={false} tickLine={false} />
         <Tooltip content={<Tip />} cursor={{ fill: 'var(--surface2)' }} />
-        <Bar dataKey="Orçado"    fill="#65B32E" radius={[4,4,0,0]} />
-        <Bar dataKey="Realizado" fill="#4A9EDB" radius={[4,4,0,0]} />
-        <Bar dataKey="Saldo"     fill="#CBD5E1" radius={[4,4,0,0]} />
+        <Bar dataKey="Orçado"    fill="#F5C800" radius={[4,4,0,0]} />
+        <Bar dataKey="Realizado" fill="#1B3FAD" radius={[4,4,0,0]} />
+        <Bar dataKey="Saldo"     fill="#E5E7EB" radius={[4,4,0,0]} />
       </BarChart>
     </ResponsiveContainer>
   )
@@ -126,8 +126,8 @@ export function ImpostoChart({ byCategory }) {
           tick={{ fill: 'var(--muted)', fontSize: 11 }}
           axisLine={false} tickLine={false} />
         <Tooltip content={<Tip />} cursor={{ fill: 'var(--surface2)' }} />
-        <Bar dataKey="Base"    fill="#CBD5E1" stackId="a" />
-        <Bar dataKey="Imposto" fill="#F5A623" stackId="a" radius={[0,4,4,0]} />
+        <Bar dataKey="Base"    fill="#E5E7EB" stackId="a" />
+        <Bar dataKey="Imposto" fill="#28C6C6" stackId="a" radius={[0,4,4,0]} />
       </BarChart>
     </ResponsiveContainer>
   )

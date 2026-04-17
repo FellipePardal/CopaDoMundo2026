@@ -112,7 +112,7 @@ function ComposicaoPanel({ item, onUpdate }) {
                 </td>
                 <td style={{ ...tdStyle, textAlign: 'center' }}>
                   <button onClick={() => removeComp(idx)} title="Remover" style={{
-                    border: 'none', background: 'transparent', color: '#E05252',
+                    border: 'none', background: 'transparent', color: '#FF6B00',
                     fontSize: 14, cursor: 'pointer', padding: 2,
                   }}>✕</button>
                 </td>
@@ -133,8 +133,8 @@ function ComposicaoPanel({ item, onUpdate }) {
             <td colSpan={3} style={{ ...tdStyle, borderBottom: 'none', padding: '8px 10px' }}>
               <button onClick={addComp} style={{
                 padding: '5px 12px', fontSize: 11.5, fontWeight: 600,
-                background: 'rgba(101,179,46,0.12)', color: '#65B32E',
-                border: '1px solid rgba(101,179,46,0.35)',
+                background: 'rgba(45,184,61,0.12)', color: '#2DB83D',
+                border: '1px solid rgba(45,184,61,0.35)',
                 borderRadius: 'var(--radius-sm)', cursor: 'pointer',
               }}>+ Adicionar componente</button>
             </td>
@@ -152,7 +152,7 @@ function ComposicaoPanel({ item, onUpdate }) {
             </td>
             <td style={{ ...tdStyle, textAlign: 'right', borderBottom: 'none',
               padding: '2px 10px 10px', fontSize: 11, fontFamily: 'var(--mono)',
-              color: bate ? '#65B32E' : '#E05252', fontWeight: 600 }}>
+              color: bate ? '#2DB83D' : '#FF6B00', fontWeight: 600 }}>
               {bate
                 ? `✓ bate com ${fmt(item.orcado)}`
                 : `Δ ${diff > 0 ? '+' : ''}${fmt(diff)} vs ${fmt(item.orcado)}`}
@@ -176,7 +176,7 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
 
   const diff = item.realizado > 0 ? Math.round(item.realizado - item.orcado) : null
   const diffColor = diff === null ? 'var(--muted2)'
-    : diff === 0 ? 'var(--muted)' : diff < 0 ? '#65B32E' : '#E05252'
+    : diff === 0 ? 'var(--muted)' : diff < 0 ? '#2DB83D' : '#FF6B00'
 
   function startEdit() {
     setDraft({
@@ -217,7 +217,7 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
     onUpdate(item.id, 'realizado', v)
   }
 
-  const rowBg = editing ? 'rgba(101,179,46,0.04)' : 'transparent'
+  const rowBg = editing ? 'rgba(45,184,61,0.04)' : 'transparent'
 
   return (
     <React.Fragment>
@@ -236,9 +236,9 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
               title={compCount > 0 ? `${compCount} componente(s) cadastrado(s)` : 'Detalhar composição'}
               style={{
                 padding: '4px 7px', borderRadius: 4, fontSize: 10, fontWeight: 700,
-                background: compCount > 0 ? 'rgba(74,158,219,0.12)' : 'var(--surface2)',
-                color: compCount > 0 ? '#4A9EDB' : 'var(--muted)',
-                border: `1px solid ${compCount > 0 ? 'rgba(74,158,219,0.30)' : 'var(--border)'}`,
+                background: compCount > 0 ? 'rgba(27,63,173,0.12)' : 'var(--surface2)',
+                color: compCount > 0 ? '#1B3FAD' : 'var(--muted)',
+                border: `1px solid ${compCount > 0 ? 'rgba(27,63,173,0.30)' : 'var(--border)'}`,
                 cursor: 'pointer', minWidth: 28, fontFamily: 'var(--mono)',
               }}>
               {expanded ? '▼' : '▶'}{compCount > 0 && ` ${compCount}`}
@@ -246,16 +246,16 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
           )}
           {item.isNew ? (
             <button onClick={() => onRemove(item.id)} style={{
-              background: 'rgba(224,82,82,0.10)', color: '#E05252',
-              border: '1px solid rgba(224,82,82,0.30)',
+              background: 'rgba(255,107,0,0.10)', color: '#FF6B00',
+              border: '1px solid rgba(255,107,0,0.30)',
               borderRadius: 6, padding: '4px 10px', fontSize: 12, cursor: 'pointer',
             }}>Remover</button>
           ) : editing ? (
             <>
               <button onClick={saveEdit} style={{
                 padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600,
-                background: 'rgba(101,179,46,0.15)', color: '#65B32E',
-                border: '1px solid rgba(101,179,46,0.35)', cursor: 'pointer',
+                background: 'rgba(45,184,61,0.15)', color: '#2DB83D',
+                border: '1px solid rgba(45,184,61,0.35)', cursor: 'pointer',
               }}>Salvar</button>
               <button onClick={cancelEdit} style={{
                 padding: '4px 10px', borderRadius: 6, fontSize: 12,
@@ -279,10 +279,10 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
         <span style={{
           padding: '3px 9px', borderRadius: 20, fontSize: 11, fontWeight: 700,
           background: item.resp === 'João Crispim'
-            ? 'rgba(101,179,46,0.12)' : 'rgba(74,158,219,0.12)',
-          color: item.resp === 'João Crispim' ? '#65B32E' : '#4A9EDB',
+            ? 'rgba(45,184,61,0.12)' : 'rgba(27,63,173,0.12)',
+          color: item.resp === 'João Crispim' ? '#2DB83D' : '#1B3FAD',
           border: `1px solid ${item.resp === 'João Crispim'
-            ? 'rgba(101,179,46,0.30)' : 'rgba(74,158,219,0.30)'}`,
+            ? 'rgba(45,184,61,0.30)' : 'rgba(27,63,173,0.30)'}`,
         }}>
           {item.resp === 'João Crispim' ? 'JC' : 'IV'}
         </span>
@@ -315,8 +315,8 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
                   setNewCat('')
                 }
               }} style={{ fontSize: 11, padding: '2px 6px', cursor: 'pointer',
-                background: 'rgba(101,179,46,0.15)', color: '#65B32E',
-                border: '1px solid rgba(101,179,46,0.35)', borderRadius: 4 }}>✓</button>
+                background: 'rgba(45,184,61,0.15)', color: '#2DB83D',
+                border: '1px solid rgba(45,184,61,0.35)', borderRadius: 4 }}>✓</button>
               <button onClick={() => { setAddingCat(false); setNewCat('') }}
                 style={{ fontSize: 11, padding: '2px 6px', cursor: 'pointer',
                   background: 'var(--surface2)', color: 'var(--muted)',
@@ -369,16 +369,16 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
           style={{
             padding: '2px 6px', borderRadius: 4, fontSize: 10, fontWeight: 700,
             background: item.moeda === 'Dólar'
-              ? 'rgba(74,158,219,0.12)' : 'rgba(101,179,46,0.12)',
-            color: item.moeda === 'Dólar' ? '#4A9EDB' : '#65B32E',
+              ? 'rgba(27,63,173,0.12)' : 'rgba(45,184,61,0.12)',
+            color: item.moeda === 'Dólar' ? '#1B3FAD' : '#2DB83D',
             border: `1px solid ${item.moeda === 'Dólar'
-              ? 'rgba(74,158,219,0.30)' : 'rgba(101,179,46,0.30)'}`,
+              ? 'rgba(27,63,173,0.30)' : 'rgba(45,184,61,0.30)'}`,
             cursor: 'pointer',
             appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none',
           }}
         >
-          <option value="Dólar" style={{ background: 'var(--surface)', color: '#4A9EDB' }}>USD</option>
-          <option value="Real" style={{ background: 'var(--surface)', color: '#65B32E' }}>BRL</option>
+          <option value="Dólar" style={{ background: 'var(--surface)', color: '#1B3FAD' }}>USD</option>
+          <option value="Real" style={{ background: 'var(--surface)', color: '#2DB83D' }}>BRL</option>
         </select>
       </TD>
 
@@ -393,7 +393,7 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
 
       {/* Alíquota */}
       <TD align="center" mono style={{
-        color: item.aliq > 0 ? '#F5A623' : 'var(--muted2)',
+        color: item.aliq > 0 ? '#F5C800' : 'var(--muted2)',
         fontWeight: item.aliq > 0 ? 600 : 400,
       }}>
         {editing
@@ -418,7 +418,7 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
       {/* Imposto */}
       {showTaxCols && (
         <TD align="right" mono style={{
-          color: item.imposto > 0 ? '#F5A623' : 'var(--muted2)',
+          color: item.imposto > 0 ? '#F5C800' : 'var(--muted2)',
         }}>
           {item.imposto > 0 ? fmt(item.imposto) : '—'}
         </TD>
@@ -453,7 +453,7 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
 
       {/* Realizado USD — só para itens em dólar */}
       {item.moeda === 'Dólar' ? (
-        <TD align="right" mono style={{ color: '#4A9EDB' }}>
+        <TD align="right" mono style={{ color: '#1B3FAD' }}>
           {editing
             ? <input
                 type="text"
@@ -466,7 +466,7 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
                   fontFamily: 'var(--mono)',
                   background: 'var(--surface2)',
                   border: '1px solid var(--border)',
-                  color: '#4A9EDB',
+                  color: '#1B3FAD',
                 }}
               />
             : (item.realizadoUsd || item.valorUn * item.qtd || null)
@@ -508,7 +508,7 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
           return <TD align="center" style={{ color: 'var(--muted2)' }}>—</TD>
         }
         const diffCambio = Math.round(usd * (cot - COTACAO))
-        const color = diffCambio === 0 ? 'var(--muted)' : diffCambio > 0 ? '#E05252' : '#65B32E'
+        const color = diffCambio === 0 ? 'var(--muted)' : diffCambio > 0 ? '#FF6B00' : '#2DB83D'
         return (
           <TD align="right" mono style={{ color, fontWeight: 600 }}>
             {(diffCambio > 0 ? '+' : '') + fmt(diffCambio)}
@@ -525,7 +525,7 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
 
       {/* % Exec */}
       <TD align="center" mono style={{
-        color: item.pctExec > 0 ? '#65B32E' : 'var(--muted2)',
+        color: item.pctExec > 0 ? '#2DB83D' : 'var(--muted2)',
         fontWeight: item.pctExec > 0 ? 600 : 400,
       }}>
         {item.pctExec > 0 ? fmtPct(item.pctExec) : '—'}
@@ -572,7 +572,7 @@ export default function ItemRow({ item, onUpdate, onRemove, categories = [], sho
         <td colSpan={showTaxCols ? 20 : 18} style={{
           padding: 0, background: 'var(--surface2)',
           borderBottom: '2px solid var(--border)',
-          borderLeft: '3px solid #4A9EDB',
+          borderLeft: '3px solid #1B3FAD',
         }}>
           <ComposicaoPanel item={item} onUpdate={onUpdate} />
         </td>

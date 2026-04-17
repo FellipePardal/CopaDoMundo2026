@@ -32,9 +32,9 @@ const inputStyle = {
 const Pill = ({ label, active, onClick }) => (
   <button onClick={onClick} style={{
     padding: '5px 13px', borderRadius: 20, fontSize: 11.5, fontWeight: 500,
-    border: `1px solid ${active ? '#4A9EDB' : 'var(--border)'}`,
-    background: active ? 'rgba(74,158,219,0.12)' : 'transparent',
-    color: active ? '#4A9EDB' : 'var(--muted)',
+    border: `1px solid ${active ? '#1B3FAD' : 'var(--border)'}`,
+    background: active ? 'rgba(27,63,173,0.12)' : 'transparent',
+    color: active ? '#1B3FAD' : 'var(--muted)',
     cursor: 'pointer',
   }}>{label}</button>
 )
@@ -164,8 +164,8 @@ export default function CasaItemsTable({
             width: isMobile ? '100%' : 'auto',
             padding: '7px 16px', borderRadius: 'var(--radius-sm)',
             fontSize: 12, fontWeight: 600,
-            background: 'rgba(74,158,219,0.12)', color: '#4A9EDB',
-            border: '1px solid rgba(74,158,219,0.35)', cursor: 'pointer',
+            background: 'rgba(27,63,173,0.12)', color: '#1B3FAD',
+            border: '1px solid rgba(27,63,173,0.35)', cursor: 'pointer',
           }}>+ Novo item</button>
         </div>
       </div>
@@ -179,12 +179,12 @@ export default function CasaItemsTable({
               <div key={item.id} style={{
                 background: 'var(--surface)', border: '1px solid var(--border)',
                 borderRadius: 'var(--radius-lg)', padding: '14px 16px',
-                boxShadow: 'var(--shadow-sm)', borderLeft: '3px solid #4A9EDB',
+                boxShadow: 'var(--shadow-sm)', borderLeft: '3px solid #1B3FAD',
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                   <div style={{ fontSize: 11, color: 'var(--muted)' }}>{item.cat || 'Sem categoria'}</div>
                   <button onClick={() => removeItem(item.id)} style={{
-                    border: 'none', background: 'transparent', color: '#E05252',
+                    border: 'none', background: 'transparent', color: '#FF6B00',
                     fontSize: 14, cursor: 'pointer',
                   }}>✕</button>
                 </div>
@@ -259,7 +259,7 @@ export default function CasaItemsTable({
                     <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
                       letterSpacing: '0.06em', marginBottom: 2 }}>Saldo</div>
                     <div style={{ fontSize: 13, fontWeight: 700, fontFamily: 'var(--mono)',
-                      color: saldo < 0 ? '#E05252' : 'var(--text2)', padding: '5px 0' }}>
+                      color: saldo < 0 ? '#FF6B00' : 'var(--text2)', padding: '5px 0' }}>
                       {fmt(saldo)}
                     </div>
                   </div>
@@ -310,7 +310,7 @@ export default function CasaItemsTable({
                 <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
                   letterSpacing: '0.06em', marginBottom: 2 }}>Realizado</div>
                 <div style={{ fontSize: 13, fontWeight: 700, fontFamily: 'var(--mono)',
-                  color: '#65B32E' }}>{fmt(totals.realizado)}</div>
+                  color: '#2DB83D' }}>{fmt(totals.realizado)}</div>
               </div>
             </div>
           </div>
@@ -349,7 +349,7 @@ export default function CasaItemsTable({
                       style={{ transition: 'background 0.1s' }}>
                       <TD align="center" style={{ width: 40 }}>
                         <button onClick={() => removeItem(item.id)} title="Remover" style={{
-                          border: 'none', background: 'transparent', color: '#E05252',
+                          border: 'none', background: 'transparent', color: '#FF6B00',
                           fontSize: 14, cursor: 'pointer', padding: 4,
                         }}>✕</button>
                       </TD>
@@ -402,7 +402,7 @@ export default function CasaItemsTable({
                       </TD>
                       <TD align="right" mono style={{
                         fontWeight: 600,
-                        color: item.realizado > 0 ? (saldo < 0 ? '#E05252' : 'var(--text2)') : 'var(--muted2)',
+                        color: item.realizado > 0 ? (saldo < 0 ? '#FF6B00' : 'var(--text2)') : 'var(--muted2)',
                       }}>
                         {item.realizado > 0 ? fmt(saldo) : '—'}
                       </TD>
@@ -447,7 +447,7 @@ export default function CasaItemsTable({
                     {fmt(totals.orcado)}
                   </td>
                   <td style={{ padding: '11px 13px', textAlign: 'right', fontSize: 13,
-                    fontWeight: 700, fontFamily: 'var(--mono)', color: '#65B32E',
+                    fontWeight: 700, fontFamily: 'var(--mono)', color: '#2DB83D',
                     borderTop: '2px solid var(--border)' }}>
                     {fmt(totals.realizado)}
                   </td>

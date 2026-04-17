@@ -1,7 +1,7 @@
 import React from 'react'
 import { fmtPct, fmt } from '../data/utils.js'
 
-export default function ProgressBar({ label, pct, realizado, orcado, color = '#65B32E', initials }) {
+export default function ProgressBar({ label, pct, realizado, orcado, color = '#2DB83D', initials }) {
   const p   = Math.min(100, pct || 0)
   const over = pct > 100
 

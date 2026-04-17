@@ -1,64 +1,109 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=DM+Mono:wght@300;400;500&display=swap');
 
 :root {
-  --green:        #65B32E;
-  --green-dark:   #4A8A1F;
-  --green-light:  rgba(101,179,46,0.12);
-  --green-mid:    rgba(101,179,46,0.22);
-  --green-border: rgba(101,179,46,0.35);
+  /* Brandkit Casa CazéTV */
+  --brand-amarelo:       #F5C800;
+  --brand-amarelo-soft:  #FFF8CC;
+  --brand-amarelo-mid:   #F0C000;
+  --brand-azul:          #1B3FAD;
+  --brand-azul-soft:     #EEF2FF;
+  --brand-verde:         #2DB83D;
+  --brand-verde-soft:    #EDFAF0;
+  --brand-ciano:         #28C6C6;
+  --brand-ciano-soft:    #E6FAFA;
+  --brand-laranja:       #FF6B00;
+  --brand-laranja-soft:  #FFF0E6;
 
-  --gray-dark:  #585455;
-  --gray-mid:   #6E6B6C;
-  --gray-light: #7A7778;
+  /* Superfícies */
+  --surface-bg:        #F5F6F8;
+  --surface-card:      #FFFFFF;
+  --surface-elevated:  #FFFFFF;
+  --surface-header:    #FFFFFF;
+  --surface-sidebar:   #1B3FAD;
+
+  --border-default:    rgba(0, 0, 0, 0.08);
+  --border-strong:     rgba(0, 0, 0, 0.15);
+  --border-brand:      rgba(245, 200, 0, 0.5);
+
+  --text-primary:        #111827;
+  --text-secondary:      #6B7280;
+  --text-disabled:       #9CA3AF;
+  --text-on-brand:       #0D0D0D;
+  --text-on-sidebar:     #FFFFFF;
+  --text-on-sidebar-sub: rgba(255, 255, 255, 0.6);
+
+  /* ---------- Aliases (retrocompatibilidade) ---------- */
+  --green:        var(--brand-verde);
+  --green-dark:   #228D2E;
+  --green-light:  rgba(45, 184, 61, 0.12);
+  --green-mid:    rgba(45, 184, 61, 0.22);
+  --green-border: rgba(45, 184, 61, 0.35);
+
+  --gray-dark:  #3F3F46;
+  --gray-mid:   #52525B;
+  --gray-light: #71717A;
 
   --white: #FFFFFF;
   --black: #000000;
 
-  --bg:       #F1F5F9;
-  --surface:  #FFFFFF;
-  --surface2: #F8FAFC;
-  --surface3: #F1F5F9;
-  --border:   #E2E8F0;
-  --border2:  #CBD5E1;
-  --text:     #0F172A;
-  --text2:    #1E293B;
-  --muted:    #64748B;
-  --muted2:   #94A3B8;
+  --bg:       var(--surface-bg);
+  --surface:  var(--surface-card);
+  --surface2: #F9FAFB;
+  --surface3: #F3F4F6;
+  --border:   var(--border-default);
+  --border2:  var(--border-strong);
+  --text:     var(--text-primary);
+  --text2:    #1F2937;
+  --muted:    var(--text-secondary);
+  --muted2:   var(--text-disabled);
 
-  --success:       #65B32E;
-  --success-light: rgba(101,179,46,0.15);
-  --warning:       #F5A623;
-  --warning-light: rgba(245,166,35,0.15);
-  --danger:        #E05252;
-  --danger-light:  rgba(224,82,82,0.15);
-  --info:          #4A9EDB;
-  --info-light:    rgba(74,158,219,0.15);
+  --success:       var(--brand-verde);
+  --success-light: var(--brand-verde-soft);
+  --warning:       var(--brand-amarelo);
+  --warning-light: var(--brand-amarelo-soft);
+  --danger:        var(--brand-laranja);
+  --danger-light:  var(--brand-laranja-soft);
+  --info:          var(--brand-azul);
+  --info-light:    var(--brand-azul-soft);
 
-  --font: 'Poppins', 'Segoe UI', system-ui, sans-serif;
-  --mono: 'JetBrains Mono', 'Consolas', monospace;
+  --font: 'Syne', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'DM Mono', 'Consolas', monospace;
 
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 14px;
+  --radius-lg: 12px;
   --radius-xl: 20px;
 
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-  --shadow-md: 0 4px 20px rgba(0,0,0,0.10);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10);
 }
 
 [data-theme="dark"] {
-  --bg:       #585455;
-  --surface:  rgba(255,255,255,0.07);
-  --surface2: rgba(255,255,255,0.04);
-  --surface3: rgba(255,255,255,0.11);
-  --border:   rgba(255,255,255,0.10);
-  --border2:  rgba(255,255,255,0.18);
-  --text:     #FFFFFF;
-  --text2:    rgba(255,255,255,0.85);
-  --muted:    rgba(255,255,255,0.50);
-  --muted2:   rgba(255,255,255,0.30);
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.25);
-  --shadow-md: 0 4px 20px rgba(0,0,0,0.35);
+  --surface-bg:       #0F172A;
+  --surface-card:     rgba(255, 255, 255, 0.04);
+  --surface-elevated: rgba(255, 255, 255, 0.06);
+  --surface-header:   rgba(15, 23, 42, 0.85);
+
+  --border-default: rgba(255, 255, 255, 0.10);
+  --border-strong:  rgba(255, 255, 255, 0.18);
+
+  --text-primary:   #F9FAFB;
+  --text-secondary: rgba(255, 255, 255, 0.55);
+  --text-disabled:  rgba(255, 255, 255, 0.30);
+
+  --bg:       var(--surface-bg);
+  --surface:  var(--surface-card);
+  --surface2: rgba(255, 255, 255, 0.03);
+  --surface3: rgba(255, 255, 255, 0.08);
+  --border:   var(--border-default);
+  --border2:  var(--border-strong);
+  --text:     var(--text-primary);
+  --text2:    rgba(255, 255, 255, 0.85);
+  --muted:    var(--text-secondary);
+  --muted2:   var(--text-disabled);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -96,14 +141,15 @@ input, select, textarea {
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
-input::placeholder { color: var(--muted); }
-input:focus, select:focus {
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px var(--green-light);
+input::placeholder { color: var(--muted2); }
+input:focus, select:focus, textarea:focus {
+  border-color: var(--brand-azul);
+  box-shadow: 0 0 0 3px rgba(27, 63, 173, 0.15);
 }
 select option { background: var(--surface); color: var(--text); }
 button { font-family: var(--font); cursor: pointer; transition: all 0.15s; }
 button:active { transform: scale(0.97); }
+
 @media (max-width: 768px) {
   body { font-size: 13px; }
 }

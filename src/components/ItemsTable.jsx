@@ -18,9 +18,9 @@ const TH = ({ children, align = 'left', style = {} }) => (
 const Pill = ({ label, active, onClick }) => (
   <button onClick={onClick} style={{
     padding: '5px 13px', borderRadius: 20, fontSize: 11.5, fontWeight: 500,
-    border: `1px solid ${active ? '#65B32E' : 'var(--border)'}`,
-    background: active ? 'rgba(101,179,46,0.12)' : 'transparent',
-    color: active ? '#65B32E' : 'var(--muted)',
+    border: `1px solid ${active ? '#2DB83D' : 'var(--border)'}`,
+    background: active ? 'rgba(45,184,61,0.12)' : 'transparent',
+    color: active ? '#2DB83D' : 'var(--muted)',
     cursor: 'pointer',
   }}>{label}</button>
 )
@@ -100,14 +100,14 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
               <button onClick={() => addItem('João Crispim')} style={{
                 flex: 1, padding: '8px', borderRadius: 'var(--radius-sm)',
                 fontSize: 12, fontWeight: 600,
-                background: 'rgba(101,179,46,0.12)', color: '#65B32E',
-                border: '1px solid rgba(101,179,46,0.35)', cursor: 'pointer',
+                background: 'rgba(45,184,61,0.12)', color: '#2DB83D',
+                border: '1px solid rgba(45,184,61,0.35)', cursor: 'pointer',
               }}>+ João Crispim</button>
               <button onClick={() => addItem('Ivan Souza')} style={{
                 flex: 1, padding: '8px', borderRadius: 'var(--radius-sm)',
                 fontSize: 12, fontWeight: 600,
-                background: 'rgba(74,158,219,0.12)', color: '#4A9EDB',
-                border: '1px solid rgba(74,158,219,0.35)', cursor: 'pointer',
+                background: 'rgba(27,63,173,0.12)', color: '#1B3FAD',
+                border: '1px solid rgba(27,63,173,0.35)', cursor: 'pointer',
               }}>+ Ivan Souza</button>
             </div>
           </>
@@ -137,13 +137,13 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
             <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
               <button onClick={() => addItem('João Crispim')} style={{
                 padding: '7px 16px', borderRadius: 'var(--radius-sm)', fontSize: 12, fontWeight: 600,
-                background: 'rgba(101,179,46,0.12)', color: '#65B32E',
-                border: '1px solid rgba(101,179,46,0.35)', cursor: 'pointer',
+                background: 'rgba(45,184,61,0.12)', color: '#2DB83D',
+                border: '1px solid rgba(45,184,61,0.35)', cursor: 'pointer',
               }}>+ João Crispim</button>
               <button onClick={() => addItem('Ivan Souza')} style={{
                 padding: '7px 16px', borderRadius: 'var(--radius-sm)', fontSize: 12, fontWeight: 600,
-                background: 'rgba(74,158,219,0.12)', color: '#4A9EDB',
-                border: '1px solid rgba(74,158,219,0.35)', cursor: 'pointer',
+                background: 'rgba(27,63,173,0.12)', color: '#1B3FAD',
+                border: '1px solid rgba(27,63,173,0.35)', cursor: 'pointer',
               }}>+ Ivan Souza</button>
             </div>
           </>
@@ -160,7 +160,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
               borderRadius: 'var(--radius-lg)',
               padding: '14px 16px',
               boxShadow: 'var(--shadow-sm)',
-              borderLeft: `3px solid ${item.resp === 'João Crispim' ? '#65B32E' : '#4A9EDB'}`,
+              borderLeft: `3px solid ${item.resp === 'João Crispim' ? '#2DB83D' : '#1B3FAD'}`,
             }}>
               {/* Header do card */}
               <div style={{ display: 'flex', justifyContent: 'space-between',
@@ -170,18 +170,18 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                     <span style={{
                       padding: '2px 8px', borderRadius: 20, fontSize: 10, fontWeight: 700,
                       background: item.resp === 'João Crispim'
-                        ? 'rgba(101,179,46,0.12)' : 'rgba(74,158,219,0.12)',
-                      color: item.resp === 'João Crispim' ? '#65B32E' : '#4A9EDB',
+                        ? 'rgba(45,184,61,0.12)' : 'rgba(27,63,173,0.12)',
+                      color: item.resp === 'João Crispim' ? '#2DB83D' : '#1B3FAD',
                       border: `1px solid ${item.resp === 'João Crispim'
-                        ? 'rgba(101,179,46,0.30)' : 'rgba(74,158,219,0.30)'}`,
+                        ? 'rgba(45,184,61,0.30)' : 'rgba(27,63,173,0.30)'}`,
                     }}>
                       {item.resp === 'João Crispim' ? 'JC' : 'IV'}
                     </span>
                     <span style={{ fontSize: 10, color: 'var(--muted)' }}>{item.cat}</span>
                     <span style={{
                       padding: '1px 6px', borderRadius: 3, fontSize: 9, fontWeight: 700,
-                      background: item.moeda === 'Dólar' ? 'rgba(74,158,219,0.12)' : 'rgba(101,179,46,0.12)',
-                      color: item.moeda === 'Dólar' ? '#4A9EDB' : '#65B32E',
+                      background: item.moeda === 'Dólar' ? 'rgba(27,63,173,0.12)' : 'rgba(45,184,61,0.12)',
+                      color: item.moeda === 'Dólar' ? '#1B3FAD' : '#2DB83D',
                     }}>
                       {item.moeda === 'Dólar' ? 'USD' : 'BRL'}
                     </span>
@@ -206,7 +206,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                     <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
                       letterSpacing: '0.06em', marginBottom: 2 }}>Imposto ({(item.aliq*100).toFixed(0)}%)</div>
                     <div style={{ fontSize: 13, fontWeight: 700, fontFamily: 'var(--mono)',
-                      color: '#F5A623' }}>{fmt(item.imposto)}</div>
+                      color: '#F5C800' }}>{fmt(item.imposto)}</div>
                   </div>
                 )}
                 <div>
@@ -256,12 +256,12 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                   <div style={{ display: 'flex', justifyContent: 'space-between',
                     marginBottom: 4, fontSize: 11 }}>
                     <span style={{ color: 'var(--muted)' }}>Execução</span>
-                    <span style={{ fontWeight: 700, color: '#65B32E',
+                    <span style={{ fontWeight: 700, color: '#2DB83D',
                       fontFamily: 'var(--mono)' }}>{item.pctExec.toFixed(1)}%</span>
                   </div>
                   <div style={{ height: 4, background: 'var(--surface3)',
                     borderRadius: 99, overflow: 'hidden' }}>
-                    <div style={{ height: '100%', borderRadius: 99, background: '#65B32E',
+                    <div style={{ height: '100%', borderRadius: 99, background: '#2DB83D',
                       width: `${Math.min(100, item.pctExec)}%` }} />
                   </div>
                 </div>
@@ -302,9 +302,9 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               {[
                 { label: 'Orçado',     val: totals.orcado,    color: 'var(--text)' },
-                { label: 'Imposto',    val: totals.imposto,   color: '#F5A623'     },
+                { label: 'Imposto',    val: totals.imposto,   color: '#F5C800'     },
                 { label: 'Sem Imp.',   val: totals.semImp,    color: 'var(--muted)'},
-                { label: 'Realizado',  val: totals.realizado, color: '#65B32E'     },
+                { label: 'Realizado',  val: totals.realizado, color: '#2DB83D'     },
               ].map((t, i) => (
                 <div key={i}>
                   <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase',
@@ -396,7 +396,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                   {showTaxCols && (
                     <td style={{ padding: '11px 13px', textAlign: 'right',
                       fontSize: 13, fontWeight: 700, fontFamily: 'var(--mono)',
-                      color: '#F5A623', borderTop: '2px solid var(--border)' }}>
+                      color: '#F5C800', borderTop: '2px solid var(--border)' }}>
                       {fmt(totals.imposto)}
                     </td>
                   )}
@@ -409,7 +409,7 @@ export default function ItemsTable({ items, updateItem, addItem, removeItem, isM
                   )}
                   <td style={{ padding: '11px 13px', textAlign: 'right',
                     fontSize: 13, fontWeight: 700, fontFamily: 'var(--mono)',
-                    color: '#65B32E', borderTop: '2px solid var(--border)' }}>
+                    color: '#2DB83D', borderTop: '2px solid var(--border)' }}>
                     {fmt(totals.realizado)}
                   </td>
                   <td colSpan={7} style={{ borderTop: '2px solid var(--border)' }} />
